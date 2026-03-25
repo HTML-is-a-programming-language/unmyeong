@@ -170,7 +170,7 @@ export async function POST(request: Request) {
     else if (body.mode === 'idol')       prompt = buildIdolPrompt(body)
 
     const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-5-20251001',
+      model: 'claude-sonnet-4-6',
       max_tokens: 1000,
       messages: [{ role: 'user', content: prompt }],
     })
