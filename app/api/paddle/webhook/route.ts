@@ -22,12 +22,16 @@ export async function POST(request: Request) {
       process.env.PADDLE_WEBHOOK_SECRET!,
       signature
     )
-  } catch (err) {
+} catch (err) {
     console.error('Webhook signature verification failed:', err)
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
 
   // 2. 결제 완료 이벤트 처리
+  if (!event) {
+    return NextResponse.json({ error: 'Invalid event' }, { status: 400 })
+  }
+
   if (event.eventType === EventName.TransactionCompleted) {
     const tx = event.data
 
