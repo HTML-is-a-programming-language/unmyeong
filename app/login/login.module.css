@@ -1,0 +1,130 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.card {
+  width: 100%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+}
+
+.logo {
+  font-family: var(--font-serif);
+  font-size: 3rem;
+  font-weight: 300;
+  color: var(--gold);
+  letter-spacing: 0.3em;
+}
+
+.logoEn {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.5em;
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+
+.tagline {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 1rem;
+  line-height: 1.6;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 1.5rem 0;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.btnGoogle,
+.btnApple {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  border: 1px solid var(--border);
+}
+
+.btnGoogle {
+  background: white;
+  color: var(--ink);
+}
+.btnGoogle:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: rgba(201, 148, 58, 0.04);
+}
+
+.btnApple {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.btnApple:hover:not(:disabled) {
+  background: var(--red);
+  border-color: var(--red);
+}
+
+.btnGoogle:disabled,
+.btnApple:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error {
+  margin-top: 1rem;
+  color: var(--red);
+  font-size: 0.82rem;
+}
+
+.terms {
+  margin-top: 1.2rem;
+  font-size: 0.72rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.features {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+  padding: 1rem;
+  background: rgba(201, 148, 58, 0.06);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.featureIcon {
+  color: var(--gold);
+  font-size: 0.7rem;
+}
