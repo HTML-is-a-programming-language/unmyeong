@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { CREDIT_PACKAGES } from '@/lib/paddle'
-import type { PackageId } from '@/lib/paddle'
+import { CREDIT_PACKAGES } from '@/lib/packages'
+import type { PackageId } from '@/lib/packages'
 import styles from './BuyCreditsModal.module.css'
 
 interface Props {
