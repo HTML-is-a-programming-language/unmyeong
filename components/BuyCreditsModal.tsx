@@ -47,11 +47,11 @@ export default function BuyCreditsModal({ onClose }: Props) {
           {CREDIT_PACKAGES.map(pkg => (
             <button
               key={pkg.id}
-              className={`${styles.pkg} ${pkg.id === 'credits_15' ? styles.pkgFeatured : ''}`}
+              className={`${styles.pkg} ${pkg.id === 'credits_20' ? styles.pkgFeatured : ''}`}
               onClick={() => handleBuy(pkg.id)}
               disabled={loading !== null}
             >
-              {pkg.id === 'credits_15' && (
+              {pkg.id === 'credits_20' && (
                 <span className={styles.badge}>인기</span>
               )}
               <div className={styles.pkgLeft}>
