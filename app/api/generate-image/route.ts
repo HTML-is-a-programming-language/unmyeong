@@ -93,7 +93,7 @@ export async function POST(request: Request) {
       style: 'vivid',
     })
 
-    const imageUrl = response.data[0]?.url
+    const imageUrl = response.data?.[0]?.url
     if (!imageUrl) {
       // 크레딧 복구
       await supabase
