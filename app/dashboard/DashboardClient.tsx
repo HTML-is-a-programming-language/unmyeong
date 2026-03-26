@@ -196,6 +196,11 @@ export default function DashboardClient({ user, initialCredits }: Props) {
 
   const costMap: Record<ReadingMode, number> = { personal: 1, compatibility: 2, idol: 3 }
 
+  async function handleSignOut() {
+    await supabase.auth.signOut()
+    router.push('/login')
+  }
+
   async function handleGenerateImage() {
     if (!result) return
     if (credits < 2) { setShowBuyModal(true); return }
@@ -216,9 +221,6 @@ export default function DashboardClient({ user, initialCredits }: Props) {
     } finally {
       setGeneratingImage(false)
     }
-  }
-    await supabase.auth.signOut()
-    router.push('/login')
   }
 
   // ── 제출 ────────────────────────────────────────
