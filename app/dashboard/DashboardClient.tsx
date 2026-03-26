@@ -7,20 +7,13 @@ import type { ReadingMode, ReadingCategory, Celebrity } from '@/types'
 import styles from './dashboard.module.css'
 import BuyCreditsModal from '@/components/BuyCreditsModal'
 import ShareCard from '@/components/ShareCard'
+import { t } from '@/lib/i18n'
 
 // ── 상수 데이터 ──────────────────────────────────────────────────
 
-const READING_CATEGORIES = [
-  { id: 'personality', kr: '성격운', en: 'Personality' },
-  { id: 'career',      kr: '직업운', en: 'Career' },
-  { id: 'wealth',      kr: '재물운', en: 'Wealth' },
-  { id: 'love',        kr: '연애운', en: 'Love' },
-  { id: 'marriage',    kr: '결혼운', en: 'Marriage' },
-  { id: 'health',      kr: '건강운', en: 'Health' },
-  { id: 'family',      kr: '가정운', en: 'Family' },
-  { id: 'children',    kr: '자녀운', en: 'Children' },
-  { id: 'mentor',      kr: '귀인운', en: 'Mentor' },
-  { id: 'destiny',     kr: '대운',   en: 'Life Destiny' },
+const READING_CATEGORY_IDS = [
+  'personality', 'career', 'wealth', 'love', 'marriage',
+  'health', 'family', 'children', 'mentor', 'destiny'
 ] as const
 
 const LANGUAGES = [
@@ -230,12 +223,12 @@ export default function DashboardClient({ user, initialCredits }: Props) {
       setShowBuyModal(true)
       return
     }
-    if (!date1) { showToast('생년월일을 입력해주세요.'); return }
-    if (mode === 'personal' && !readingCat) { showToast('운세 종류를 선택해주세요.'); return }
-    if (mode === 'compatibility' && !date2) { showToast('상대방 생년월일을 입력해주세요.'); return }
+    if (!date1) { showToast(t(lang, 'enterBirth')); return }
+    if (mode === 'personal' && !readingCat) { showToast(t(lang, 'selectReading')); return }
+    if (mode === 'compatibility' && !date2) { showToast(t(lang, 'enterPartnerBirth')); return }
     if (mode === 'idol') {
-      if (showCustom && (!customName || !customBirth)) { showToast('셀럽 이름과 생년월일을 입력해주세요.'); return }
-      if (!showCustom && !selectedIdol) { showToast('셀럽을 선택해주세요.'); return }
+      if (showCustom && (!customName || !customBirth)) { showToast(t(lang, 'enterCelebInfo')); return }
+      if (!showCustom && !selectedIdol) { showToast(t(lang, 'selectCeleb')); return }
     }
 
     setLoading(true)
@@ -271,8 +264,8 @@ export default function DashboardClient({ user, initialCredits }: Props) {
       setResult(data.reading)
 
       const catLabel = mode === 'personal'
-        ? READING_CATEGORIES.find(c => c.id === readingCat)?.kr ?? ''
-        : mode === 'compatibility' ? '궁합' : '아이돌 궁합'
+        ? t(lang, readingCat ?? '')
+        : mode === 'compatibility' ? t(lang, 'compatibility') : t(lang, 'idol')
       setResultTitle(catLabel)
 
     } catch (e: unknown) {
@@ -282,14 +275,9 @@ export default function DashboardClient({ user, initialCredits }: Props) {
     }
   }, [mode, lang, credits, date1, date2, calendar1, calendar2, time1, time2, gender1, gender2, place1, readingCat, selectedIdol, showCustom, customName, customBirth, customGender, customGroup])
 
-  function handleShare() {
-    const text = `✦ 나의 ${resultTitle} 사주 결과 — unmyeong.com 에서 확인해보세요\n#사주 #운명 #Kpop`
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
-  }
-
   function handleCopy() {
     if (result) {
-      navigator.clipboard.writeText(result).then(() => showToast('복사됐어요!'))
+      navigator.clipboard.writeText(result).then(() => showToast(t(lang, 'copied')))
     }
   }
 
@@ -306,10 +294,10 @@ export default function DashboardClient({ user, initialCredits }: Props) {
           <div className={styles.headerRight}>
             <div className={styles.creditsChip}>
               <span className={styles.creditNum}>{credits}</span>
-              <span className={styles.creditLabel}>credits</span>
+              <span className={styles.creditLabel}>{t(lang,'credits')}</span>
             </div>
-            <button className={styles.btnBuy} onClick={() => setShowBuyModal(true)}>+ 충전</button>
-            <button className={styles.btnSignOut} onClick={handleSignOut}>로그아웃</button>
+            <button className={styles.btnBuy} onClick={() => setShowBuyModal(true)}>{t(lang,'charge')}</button>
+            <button className={styles.btnSignOut} onClick={handleSignOut}>{t(lang,'logout')}</button>
           </div>
         </div>
       </header>
@@ -323,9 +311,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
               className={`${styles.modeTab} ${mode === m ? styles.modeTabActive : ''}`}
               onClick={() => { setMode(m); setResult(null) }}
             >
-              <span className={styles.modeKr}>
-                {m === 'personal' ? '개인 사주' : m === 'compatibility' ? '궁합' : '아이돌 궁합'}
-              </span>
+              <span className={styles.modeKr}>{t(lang, m)}</span>
               <span className={styles.modeCost}>{costMap[m]} credit{costMap[m] > 1 ? 's' : ''}</span>
             </button>
           ))}
@@ -347,64 +333,65 @@ export default function DashboardClient({ user, initialCredits }: Props) {
         {/* Form */}
         <div className={styles.formCard}>
           {/* Person 1 */}
-          <div className={styles.sectionTitle}>본인 정보</div>
+          <div className={styles.sectionTitle}>{t(lang,'myInfo')}</div>
           <div className={styles.grid2} style={{marginBottom:'0.75rem'}}>
             <div className={styles.field}>
-              <label>닉네임 (공유 카드에 표시)</label>
+              <label>{t(lang,'nickname')}</label>
               <input
                 type="text"
-                placeholder="예: 민지, Minji, みんじ"
+                placeholder={t(lang,'nicknamePlaceholder')}
                 value={nickname}
                 onChange={e => setNickname(e.target.value)}
                 maxLength={20}
               />
             </div>
             <div className={styles.field}>
-              <label>성별</label>
+              <label>{t(lang,'gender')}</label>
               <select value={gender1} onChange={e=>setGender1(e.target.value)}>
-                <option value="female">여 Female</option>
-                <option value="male">남 Male</option>
-                <option value="nonbinary">Non-binary</option>
+                <option value="female">{t(lang,'female')}</option>
+                <option value="male">{t(lang,'male')}</option>
+                <option value="nonbinary">{t(lang,'nonbinary')}</option>
               </select>
             </div>
           </div>
           <div className={styles.grid3}>
             <div className={styles.field}>
-              <label>생년월일</label>
+              <label>{t(lang,'birthDate')}</label>
               <input type="date" value={date1} onChange={e => setDate1(e.target.value)} />
             </div>
             <div className={styles.field}>
-              <label>양력 / 음력</label>
+              <label>{t(lang,'solar')} / {t(lang,'lunar')}</label>
               <div className={styles.toggle}>
-                <button className={`${styles.togBtn} ${calendar1==='solar'?styles.togActive:''}`} onClick={()=>setCalendar1('solar')}>양력</button>
-                <button className={`${styles.togBtn} ${calendar1==='lunar'?styles.togActive:''}`} onClick={()=>setCalendar1('lunar')}>음력</button>
+                <button className={`${styles.togBtn} ${calendar1==='solar'?styles.togActive:''}`} onClick={()=>setCalendar1('solar')}>{t(lang,'solar')}</button>
+                <button className={`${styles.togBtn} ${calendar1==='lunar'?styles.togActive:''}`} onClick={()=>setCalendar1('lunar')}>{t(lang,'lunar')}</button>
               </div>
             </div>
             <div className={styles.field}>
-              <label>태어난 시간</label>
+              <label>{t(lang,'birthTime')}</label>
               <select value={time1} onChange={e=>setTime1(e.target.value)}>
-                {BIRTH_TIMES.map(t=><option key={t.value} value={t.value}>{t.label}</option>)}
+                <option value="unknown">{t(lang,'unknown')}</option>
+                {BIRTH_TIMES.slice(1).map(bt=><option key={bt.value} value={bt.value}>{bt.label}</option>)}
               </select>
             </div>
           </div>
           <div className={styles.field}>
-            <label>태어난 지역 (선택)</label>
-            <input type="text" placeholder="예: 서울, 부산" value={place1} onChange={e=>setPlace1(e.target.value)} />
+            <label>{t(lang,'birthPlace')}</label>
+            <input type="text" placeholder={t(lang,'birthPlacePlaceholder')} value={place1} onChange={e=>setPlace1(e.target.value)} />
           </div>
 
           {/* Personal: category */}
           {mode === 'personal' && (
             <>
-              <div className={styles.sectionTitle} style={{marginTop:'1.2rem'}}>운세 종류 선택</div>
+              <div className={styles.sectionTitle} style={{marginTop:'1.2rem'}}>{t(lang,'readingType')}</div>
               <div className={styles.catGrid}>
-                {READING_CATEGORIES.map(c => (
+                {READING_CATEGORY_IDS.map(id => (
                   <button
-                    key={c.id}
-                    className={`${styles.catBtn} ${readingCat===c.id ? styles.catBtnActive : ''}`}
-                    onClick={() => setReadingCat(c.id as ReadingCategory)}
+                    key={id}
+                    className={`${styles.catBtn} ${readingCat===id ? styles.catBtnActive : ''}`}
+                    onClick={() => setReadingCat(id as ReadingCategory)}
                   >
-                    <span className={styles.catKr}>{c.kr}</span>
-                    <span className={styles.catEn}>{c.en}</span>
+                    <span className={styles.catKr}>{t(lang, id)}</span>
+                    {lang === 'Korean' ? null : <span className={styles.catEn}>{t('Korean', id)}</span>}
                   </button>
                 ))}
               </div>
@@ -414,32 +401,33 @@ export default function DashboardClient({ user, initialCredits }: Props) {
           {/* Compatibility: person 2 */}
           {mode === 'compatibility' && (
             <>
-              <div className={styles.sectionTitle} style={{marginTop:'1.2rem'}}>상대방 정보</div>
+              <div className={styles.sectionTitle} style={{marginTop:'1.2rem'}}>{t(lang,'partnerInfo')}</div>
               <div className={styles.grid3}>
                 <div className={styles.field}>
-                  <label>생년월일</label>
+                  <label>{t(lang,'birthDate')}</label>
                   <input type="date" value={date2} onChange={e=>setDate2(e.target.value)} />
                 </div>
                 <div className={styles.field}>
-                  <label>양력 / 음력</label>
+                  <label>{t(lang,'solar')} / {t(lang,'lunar')}</label>
                   <div className={styles.toggle}>
-                    <button className={`${styles.togBtn} ${calendar2==='solar'?styles.togActive:''}`} onClick={()=>setCalendar2('solar')}>양력</button>
-                    <button className={`${styles.togBtn} ${calendar2==='lunar'?styles.togActive:''}`} onClick={()=>setCalendar2('lunar')}>음력</button>
+                    <button className={`${styles.togBtn} ${calendar2==='solar'?styles.togActive:''}`} onClick={()=>setCalendar2('solar')}>{t(lang,'solar')}</button>
+                    <button className={`${styles.togBtn} ${calendar2==='lunar'?styles.togActive:''}`} onClick={()=>setCalendar2('lunar')}>{t(lang,'lunar')}</button>
                   </div>
                 </div>
                 <div className={styles.field}>
-                  <label>태어난 시간</label>
+                  <label>{t(lang,'birthTime')}</label>
                   <select value={time2} onChange={e=>setTime2(e.target.value)}>
-                    {BIRTH_TIMES.map(t=><option key={t.value} value={t.value}>{t.label}</option>)}
+                    <option value="unknown">{t(lang,'unknown')}</option>
+                    {BIRTH_TIMES.slice(1).map(bt=><option key={bt.value} value={bt.value}>{bt.label}</option>)}
                   </select>
                 </div>
               </div>
               <div className={styles.field} style={{maxWidth:'200px'}}>
-                <label>성별</label>
+                <label>{t(lang,'gender')}</label>
                 <select value={gender2} onChange={e=>setGender2(e.target.value)}>
-                  <option value="male">남 Male</option>
-                  <option value="female">여 Female</option>
-                  <option value="nonbinary">Non-binary</option>
+                  <option value="male">{t(lang,'male')}</option>
+                  <option value="female">{t(lang,'female')}</option>
+                  <option value="nonbinary">{t(lang,'nonbinary')}</option>
                 </select>
               </div>
             </>
@@ -448,20 +436,17 @@ export default function DashboardClient({ user, initialCredits }: Props) {
           {/* Idol drill-down */}
           {mode === 'idol' && (
             <>
-              <div className={styles.sectionTitle} style={{marginTop:'1.2rem'}}>셀럽 선택</div>
-              {/* Step 1: 가수/배우 */}
+              <div className={styles.sectionTitle} style={{marginTop:'1.2rem'}}>{t(lang,'celebSelect')}</div>
               <div className={styles.drillRow}>
-                <button className={`${styles.drillBtn} ${celebCat==='singer'?styles.drillActive:''}`} onClick={()=>{ setCelebCat('singer'); setSelectedIdol(null) }}>가수</button>
-                <button className={`${styles.drillBtn} ${celebCat==='actor'?styles.drillActive:''}`} onClick={()=>{ setCelebCat('actor'); setSelectedIdol(null) }}>배우</button>
+                <button className={`${styles.drillBtn} ${celebCat==='singer'?styles.drillActive:''}`} onClick={()=>{ setCelebCat('singer'); setSelectedIdol(null) }}>{t(lang,'singer')}</button>
+                <button className={`${styles.drillBtn} ${celebCat==='actor'?styles.drillActive:''}`} onClick={()=>{ setCelebCat('actor'); setSelectedIdol(null) }}>{t(lang,'actor')}</button>
               </div>
-              {/* Step 2: 솔로/그룹 */}
               {celebCat==='singer' && (
                 <div className={styles.drillRow}>
-                  <button className={`${styles.drillBtn} ${singerType==='group'?styles.drillActive:''}`} onClick={()=>{ setSingerType('group'); setSelectedIdol(null) }}>그룹</button>
-                  <button className={`${styles.drillBtn} ${singerType==='solo'?styles.drillActive:''}`} onClick={()=>{ setSingerType('solo'); setSelectedIdol(null) }}>솔로</button>
+                  <button className={`${styles.drillBtn} ${singerType==='group'?styles.drillActive:''}`} onClick={()=>{ setSingerType('group'); setSelectedIdol(null) }}>{t(lang,'group')}</button>
+                  <button className={`${styles.drillBtn} ${singerType==='solo'?styles.drillActive:''}`} onClick={()=>{ setSingerType('solo'); setSelectedIdol(null) }}>{t(lang,'solo')}</button>
                 </div>
               )}
-              {/* Step 3: 그룹 목록 */}
               {celebCat==='singer' && singerType==='group' && (
                 <div className={styles.drillRow}>
                   {Object.keys(GROUPS).map(g => (
@@ -469,7 +454,6 @@ export default function DashboardClient({ user, initialCredits }: Props) {
                   ))}
                 </div>
               )}
-              {/* Step 4: 셀럽 카드 */}
               <div className={styles.idolGrid}>
                 {getCurrentIdolList().map(idol => (
                   <div
@@ -483,23 +467,22 @@ export default function DashboardClient({ user, initialCredits }: Props) {
                   </div>
                 ))}
               </div>
-              {/* Custom input */}
               <button className={styles.customToggle} onClick={()=>{ setShowCustom(v=>!v); setSelectedIdol(null) }}>
-                {showCustom ? '▲ 직접 입력 닫기' : '▼ 목록에 없으면 직접 입력'}
+                {showCustom ? t(lang,'nocelebClose') : t(lang,'noceleb')}
               </button>
               {showCustom && (
                 <div className={styles.customBox}>
                   <div className={styles.grid3}>
-                    <div className={styles.field}><label>이름</label><input type="text" placeholder="예: 송강" value={customName} onChange={e=>setCustomName(e.target.value)}/></div>
-                    <div className={styles.field}><label>생년월일</label><input type="date" value={customBirth} onChange={e=>setCustomBirth(e.target.value)}/></div>
-                    <div className={styles.field}><label>성별</label>
+                    <div className={styles.field}><label>{t(lang,'celebName')}</label><input type="text" placeholder={t(lang,'celebNamePlaceholder')} value={customName} onChange={e=>setCustomName(e.target.value)}/></div>
+                    <div className={styles.field}><label>{t(lang,'celebBirth')}</label><input type="date" value={customBirth} onChange={e=>setCustomBirth(e.target.value)}/></div>
+                    <div className={styles.field}><label>{t(lang,'celebGender')}</label>
                       <select value={customGender} onChange={e=>setCustomGender(e.target.value)}>
-                        <option value="male">남</option>
-                        <option value="female">여</option>
+                        <option value="male">{t(lang,'male')}</option>
+                        <option value="female">{t(lang,'female')}</option>
                       </select>
                     </div>
                   </div>
-                  <div className={styles.field} style={{marginTop:'0.6rem'}}><label>소속 / 직업</label><input type="text" placeholder="예: 배우, 드라마 출연" value={customGroup} onChange={e=>setCustomGroup(e.target.value)}/></div>
+                  <div className={styles.field} style={{marginTop:'0.6rem'}}><label>{t(lang,'celebGroup')}</label><input type="text" placeholder={t(lang,'celebGroupPlaceholder')} value={customGroup} onChange={e=>setCustomGroup(e.target.value)}/></div>
                 </div>
               )}
             </>
@@ -508,14 +491,14 @@ export default function DashboardClient({ user, initialCredits }: Props) {
 
         {/* Submit */}
         <button className={styles.btnSubmit} onClick={handleSubmit} disabled={loading}>
-          {loading ? '운명을 읽는 중...' : `운명을 보여줘 · ${costMap[mode]} credit${costMap[mode]>1?'s':''} 사용`}
+          {loading ? t(lang,'reading') : `${t(lang,'submit')} · ${costMap[mode]} ${t(lang,'creditUnit')}`}
         </button>
 
         {/* Loading */}
         {loading && (
           <div className={styles.loading}>
             <div className={styles.loadingChars}>天 地 人 命</div>
-            <div className={styles.loadingText}>별과 땅의 기운을 읽는 중...</div>
+            <div className={styles.loadingText}>{t(lang,'reading')}</div>
           </div>
         )}
 
@@ -524,7 +507,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
           <>
             <div className={styles.resultCard}>
               <div className={styles.resultHeader}>
-                <div className={styles.resultTitle}>{resultTitle} 사주 결과</div>
+                <div className={styles.resultTitle}>{resultTitle} {t(lang,'resultTitle')}</div>
                 <div className={styles.resultEmail}>{user.email}</div>
               </div>
               <div className={styles.resultBody}>{result}</div>
@@ -538,9 +521,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
                 onClick={handleGenerateImage}
                 disabled={generatingImage}
               >
-                {generatingImage
-                  ? '✦ AI 이미지 생성 중... (20~30초 소요)'
-                  : '✦ 사주를 AI 이미지로 표현하기 · 2 credits'}
+                {generatingImage ? t(lang,'aiImageLoading') : `${t(lang,'aiImageBtn')} · 2 credits`}
               </button>
             )}
 
@@ -548,7 +529,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
             {generatedImage && (
               <div className={styles.resultCard} style={{ marginTop:'0.75rem', overflow:'hidden' }}>
                 <div className={styles.resultHeader}>
-                  <div className={styles.resultTitle}>✦ AI가 그린 나의 사주</div>
+                  <div className={styles.resultTitle}>{t(lang,'aiImageTitle')}</div>
                 </div>
                 <div style={{ position:'relative' }}>
                   <img
@@ -567,16 +548,16 @@ export default function DashboardClient({ user, initialCredits }: Props) {
                         a.click()
                       }}
                     >
-                      이미지 저장
+                      {t(lang,'saveImage')}
                     </button>
                     <button
                       className={styles.btnTwitter}
                       onClick={() => {
-                        const text = `✦ AI가 그린 나의 사주 에너지\n\nunmyeong-tau.vercel.app\n#Saju #KoreanFortune #AIArt #Unmyeong`
+                        const text = `✦ ${t(lang,'aiImageTitle')}\n\nunmyeong-tau.vercel.app\n#Saju #KoreanFortune #AIArt #Unmyeong`
                         window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
                       }}
                     >
-                      X 공유
+                      {t(lang,'shareX')}
                     </button>
                   </div>
                 </div>
