@@ -154,14 +154,15 @@ OUTPUT LANGUAGE: ${lang}
 
 CRITICAL INSTRUCTIONS — READ CAREFULLY:
 1. Write ENTIRELY in ${lang}. Every single word must be in ${lang}.
-2. ALWAYS start with a 2-sentence introduction explaining what Saju is and what this reading means, in simple terms: "${getSajuIntro(lang)}"
-3. When mentioning any Saju term (천간, 지지, 오행, Day Master, etc.), ALWAYS explain it in plain everyday language immediately after. Example: "Your Day Master is Wood (木) — think of yourself as a tall tree: ambitious, always reaching upward, deeply rooted."
-4. Use VIVID natural metaphors and real-life examples. Not "your Wood element is strong" but "you are like a great forest — people feel sheltered around you, and you grow best when given room to expand."
-5. Make it feel like a trusted friend who happens to know ancient wisdom is speaking directly to this person.
-6. Be SPECIFIC to this person's actual Saju data — reference their specific elements and pillars.
-7. Each section should be 3-5 sentences minimum. No bullet points within sections.
-8. Do NOT use # markdown headers. Use ✦ symbol only.
-9. End with a warm, personal closing message directly to the reader.
+2. ALWAYS start with a 1-sentence warm intro that feels like a friend is about to tell you something exciting about yourself.
+3. NEVER use academic or mystical jargon without immediately translating it into everyday life. Instead of "your Wood element is dominant" say "you're the type who always has ten new ideas before breakfast — you can't help but grow." Instead of "Metal controls Wood in your chart" say "you sometimes hold yourself to impossible standards, which is both your superpower and your kryptonite."
+4. Use REAL LIFE comparisons: celebrities, everyday situations, dating scenarios, work moments. Make the person go "omg that's SO me."
+5. Write like you're texting your most insightful friend — warm, direct, a little poetic, occasionally funny.
+6. Be SPECIFIC to this person's actual Saju data — but explain WHY in human terms, not astrological terms.
+7. Each section should be 3-5 sentences. Conversational flow, not bullet points.
+8. Include at least one line per section that feels so specific the reader will screenshot it.
+9. Do NOT use # markdown headers. Use ✦ symbol only.
+10. End with a closing message that feels like a warm hug — personal and encouraging.
 
 FOLLOW THIS EXACT FORMAT:
 ${guide}
@@ -186,12 +187,11 @@ OUTPUT LANGUAGE: ${lang}
 
 CRITICAL INSTRUCTIONS:
 1. Write ENTIRELY in ${lang}.
-2. Start by briefly explaining what Saju compatibility (궁합) means in 1-2 sentences in plain language.
-3. Explain each person's core energy using natural metaphors BEFORE analyzing the match.
-4. When elements interact, explain it like this: "Wood feeds Fire — one person naturally energizes the other" or "Water controls Fire — there's tension, but also magnetic attraction."
-5. Be honest but warm. Every couple has strengths AND challenges.
-6. Each section must be 3-5 sentences. Rich and personal.
-7. Do NOT use # markdown. Use ✦ only.
+2. NO jargon — translate everything into real life. Instead of "Wood feeds Fire elementally" say "one of you naturally energizes the other — like the person who always knows exactly what to say when the other is stressed."
+3. Write like the world's most insightful friend who happens to know ancient Korean wisdom. Warm, direct, occasionally funny.
+4. Make each section feel so specific the reader screenshots it.
+5. Each section 3-5 sentences. Conversational, not academic.
+6. Do NOT use # markdown. Use ✦ only.
 
 FOLLOW THIS EXACT FORMAT:
 
@@ -226,12 +226,11 @@ OUTPUT LANGUAGE: ${lang}
 
 CRITICAL INSTRUCTIONS:
 1. Write ENTIRELY in ${lang}.
-2. Open with 1 sentence explaining what this K-celeb Saju reading reveals.
-3. Describe BOTH people's energies using vivid metaphors before analyzing compatibility.
-4. Make it feel cinematic and emotional — like the best K-drama scene.
-5. Ground every insight in actual Saju data. No generic statements.
-6. Each section 3-5 sentences. Rich, personal, emotional.
-7. Do NOT use # markdown. Use ✦ only.
+2. NO astrology jargon — everything must translate to real K-drama/K-pop fan life. Instead of "your Earth element nourishes Metal" say "you're exactly the kind of grounding, genuine person ${celeb.name} would find refreshing in a world full of performance."
+3. Make it cinematic and emotional — like you're narrating the meet-cute scene of a K-drama.
+4. Every section should have at least one line the fan will IMMEDIATELY screenshot and send to their group chat.
+5. Each section 3-5 sentences. Emotional, personal, specific.
+6. Do NOT use # markdown. Use ✦ only.
 
 FOLLOW THIS EXACT FORMAT:
 

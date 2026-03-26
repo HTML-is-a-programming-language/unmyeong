@@ -496,6 +496,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
               title={resultTitle}
               mode={mode}
               celebName={mode === 'idol' ? (selectedIdol?.name || customName) : undefined}
+              userName={user.email.split('@')[0]}
               language={lang}
             />
           </>
