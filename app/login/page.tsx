@@ -65,7 +65,7 @@ export default function LoginPage() {
             {loading ? 'Loading...' : 'Continue with Google'}
           </button>
 
-          <button
+          {/* <button
             className={styles.btnApple}
             onClick={signInWithApple}
             disabled={loading}
@@ -74,7 +74,7 @@ export default function LoginPage() {
               <path d="M13.634 10.633c-.02-2.12 1.73-3.146 1.81-3.196-.987-1.444-2.52-1.641-3.067-1.662-1.304-.133-2.554.775-3.215.775-.661 0-1.677-.756-2.759-.736-1.415.02-2.72.826-3.447 2.1-1.474 2.558-.376 6.343 1.06 8.415.703 1.016 1.542 2.155 2.643 2.114 1.061-.041 1.463-.682 2.745-.682 1.283 0 1.643.682 2.765.661 1.142-.02 1.864-1.036 2.563-2.054a9.866 9.866 0 001.162-2.373c-.028-.013-2.233-.856-2.254-3.362zM11.53 3.89c.576-.704.966-1.676.858-2.652-.831.034-1.844.556-2.44 1.24-.532.617-.999 1.614-.875 2.563.927.071 1.874-.47 2.457-1.151z"/>
             </svg>
             {loading ? 'Loading...' : 'Continue with Apple'}
-          </button>
+          </button> */}
         </div>
 
         {error && <p className={styles.error}>{error}</p>}
