@@ -7,47 +7,88 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! })
 const IMAGE_CREDIT_COST = 2
 
 // 사주 결과 → DALL-E 프롬프트 변환
-function buildImagePrompt(sajuResult: string, mode: string, language: string): string {
-  // 결과에서 핵심 키워드 추출 (첫 200자)
-  const excerpt = sajuResult.slice(0, 400).replace(/✦[^\n]*/g, '').trim()
+function buildImagePrompt(sajuResult: string, mode: string): string {
 
-  // 모드별 스타일 방향
-  const styleMap: Record<string, string> = {
-    personal: 'a mystical portrait representing the person\'s destiny and inner nature',
-    compatibility: 'two complementary energies meeting, representing the harmony between two souls',
-    idol: 'a dreamy, cinematic K-drama inspired scene representing a fateful encounter between two people',
+  // 모드별 장면 설정
+  const sceneMap: Record<string, string> = {
+    personal: 'a beautiful young Korean woman in a dreamy, ethereal setting that reflects her unique inner universe and destiny',
+    compatibility: 'two figures surrounded by intertwining cosmic energies, flowers, and soft light — a fateful connection told through color and nature',
+    idol: 'a cinematic K-drama moment: two souls drawn together by fate, surrounded by blooming flowers, soft starlight, and flowing fabric — like the most beautiful scene of a romance drama',
   }
-  const style = styleMap[mode] || styleMap['personal']
+  const scene = sceneMap[mode] || sceneMap['personal']
 
-  return `Create ${style}.
+  // 오행별 색상/요소 매핑
+  const elements = extractMZElements(sajuResult)
 
-The reading essence: "${excerpt.slice(0, 200)}"
+  return `Digital illustration artwork: ${scene}.
 
-Style requirements:
-- Traditional Korean ink painting (수묵화) meets modern celestial art
-- Dark, atmospheric background with soft gold and purple cosmic elements
-- Flowing brushstrokes, wisps of cosmic energy, symbolic natural elements (mountains, water, stars, moon)
-- Elements that match the energy: ${extractEnergyKeywords(sajuResult)}
-- Cinematic, ethereal, beautiful — suitable for sharing on social media
-- No text, no words, no letters in the image
-- Vertical/portrait orientation preferred
-- Ultra high quality, detailed, atmospheric
+Visual elements to include: ${elements}
 
-Color palette: deep midnight blues, warm golds, soft purples, gentle whites — like a night sky painting`
+Art style:
+- Soft, painterly digital illustration — like a premium K-webtoon or K-pop album art cover
+- Dreamy, romantic atmosphere with warm and cool color harmony
+- Delicate details: petals floating, light particles, flowing hair, translucent fabric
+- Beautiful lighting: soft rim light, golden hour glow, or moonlight depending on elements
+- Lush floral and nature elements woven throughout
+- Cinematic composition, like a still from a high-budget K-drama or music video
+- Aesthetic similar to: NewJeans album art, aespa concept art, IU music video visuals
+
+Color palette: ${extractColorPalette(sajuResult)}
+
+Quality: ultra-detailed, high resolution, beautiful — the kind of image someone saves to their phone immediately
+No text, no letters, no watermarks in the image.`
 }
 
-function extractEnergyKeywords(text: string): string {
-  const keywords: string[] = []
-  if (text.match(/wood|나무|木/i)) keywords.push('tall trees, forest, growing bamboo')
-  if (text.match(/fire|불|火/i)) keywords.push('gentle flames, warm light, phoenix')
-  if (text.match(/earth|흙|土/i)) keywords.push('mountains, ancient stones, golden fields')
-  if (text.match(/metal|쇠|金/i)) keywords.push('silver moonlight, crystal, gleaming sword')
-  if (text.match(/water|물|水/i)) keywords.push('flowing river, ocean waves, rain')
-  if (text.match(/mountain|산/i)) keywords.push('majestic peaks, mist')
-  if (text.match(/star|별|fate|운명/i)) keywords.push('stars, constellation, cosmic threads')
-  if (text.match(/dragon|용/i)) keywords.push('celestial dragon')
-  if (keywords.length === 0) keywords.push('cosmic energy, celestial light, flowing silk')
-  return keywords.join(', ')
+function extractMZElements(text: string): string {
+  const elements: string[] = []
+
+  if (text.match(/wood|나무|木|forest|tree/i)) {
+    elements.push('cherry blossom petals falling, delicate spring branches, soft green leaves')
+  }
+  if (text.match(/fire|불|火|flame|passion/i)) {
+    elements.push('warm sunset glow, golden light particles, red and orange flower petals')
+  }
+  if (text.match(/earth|흙|土|mountain|stable/i)) {
+    elements.push('golden wheat fields, warm earth tones, sunflowers, autumn leaves')
+  }
+  if (text.match(/metal|쇠|金|crystal|sharp/i)) {
+    elements.push('silver moonlight, sparkling crystals, white roses, shimmering stars')
+  }
+  if (text.match(/water|물|水|flow|ocean/i)) {
+    elements.push('soft blue petals floating on water, glowing jellyfish-like lights, misty atmosphere')
+  }
+  if (text.match(/star|별|fate|운명|destiny/i)) {
+    elements.push('thousands of tiny stars, constellations glowing softly, cosmic ribbons of light')
+  }
+  if (text.match(/love|연애|romance|heart/i)) {
+    elements.push('rose petals, soft pink lighting, heart-shaped bokeh lights')
+  }
+
+  if (elements.length === 0) {
+    elements.push('blooming flowers in soft pastels, floating light orbs, dreamy atmosphere')
+  }
+
+  return elements.join(', ')
+}
+
+function extractColorPalette(text: string): string {
+  if (text.match(/fire|불|火|passion|열정/i)) {
+    return 'warm rose gold, soft coral, amber, cream white — like a golden sunset'
+  }
+  if (text.match(/water|물|Water|wisdom|지혜/i)) {
+    return 'soft lavender, pale blue, silver, misty white — like moonlight on water'
+  }
+  if (text.match(/wood|나무|Wood|growth|성장/i)) {
+    return 'soft mint green, blush pink, cream, warm gold — like spring morning'
+  }
+  if (text.match(/metal|쇠|Metal|crystal/i)) {
+    return 'icy silver, pearl white, soft lilac, crystalline blue — like winter starlight'
+  }
+  if (text.match(/earth|흙|Earth|stable/i)) {
+    return 'warm peach, golden honey, soft brown, cream — like a cozy autumn afternoon'
+  }
+  // 궁합/아이돌 기본
+  return 'soft pink, dreamy lavender, warm gold, pearl white — romantic and ethereal'
 }
 
 export async function POST(request: Request) {
@@ -82,7 +123,7 @@ export async function POST(request: Request) {
       .eq('id', user.id)
 
     // 4. DALL-E 3 이미지 생성
-    const prompt = buildImagePrompt(sajuResult, mode, language)
+    const prompt = buildImagePrompt(sajuResult, mode)
 
     const response = await openai.images.generate({
       model: 'dall-e-3',
