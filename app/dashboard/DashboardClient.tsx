@@ -196,7 +196,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
 
   async function handleGenerateImage() {
     if (!result) return
-    if (credits < 2) { setShowBuyModal(true); return }
+    if (credits < 3) { setShowBuyModal(true); return }
 
     setGeneratingImage(true)
     try {
@@ -521,7 +521,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
                 onClick={handleGenerateImage}
                 disabled={generatingImage}
               >
-                {generatingImage ? t(lang,'aiImageLoading') : `${t(lang,'aiImageBtn')} · 2 credits`}
+                {generatingImage ? t(lang,'aiImageLoading') : `${t(lang,'aiImageBtn')} · 3 credits`}
               </button>
             )}
 
