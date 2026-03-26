@@ -23,29 +23,38 @@ function extractScore(text: string): string | null {
 }
 
 function extractHighlights(text: string): { title: string; body: string }[] {
-  const lines = text.split('\n')
   const sections: { title: string; body: string }[] = []
-  let current: { title: string; body: string[] } | null = null
 
-  for (const line of lines) {
-    const trimmed = line.trim()
-    if (trimmed.startsWith('✦')) {
-      if (current && current.body.length > 0) {
-        sections.push({ title: current.title, body: current.body.join(' ').trim() })
-      }
-      current = { title: trimmed.replace(/^✦\s*/, '').split('—')[0].trim(), body: [] }
-    } else if (current && trimmed.length > 0) {
-      current.body.push(trimmed)
+  // ✦ 로 시작하는 각 섹션을 정규식으로 추출
+  const sectionPattern = /✦\s*([^\n]+)\n([\s\S]*?)(?=✦|$)/g
+  let match
+
+  while ((match = sectionPattern.exec(text)) !== null) {
+    const titleLine = match[1].trim()
+    const bodyRaw = match[2].trim()
+
+    // 제목에서 점수 부분 제거 (Fate Score — 81/100 — ... 형태)
+    const title = titleLine.split('—')[0].trim()
+
+    // 본문이 비어있으면 제목 줄에 — 뒤 내용을 본문으로
+    const titleParts = titleLine.split('—')
+    const inlineBody = titleParts.length >= 3 ? titleParts.slice(2).join('—').trim() : ''
+    const body = bodyRaw || inlineBody
+
+    if (title && body) {
+      sections.push({ title, body })
     }
   }
-  if (current && current.body.length > 0) {
-    sections.push({ title: current.title, body: current.body.join(' ').trim() })
-  }
 
+  // 아이돌 궁합은 3~4번째 섹션이 가장 감동적 (Why X would fall, Dynamic)
+  // 그 외는 2~3번째
   if (sections.length >= 4) {
-    return [sections[3], sections[4] || sections[2]].filter(Boolean).slice(0, 2)
+    return [sections[3], sections[4] ?? sections[2]].filter(s => s && s.body.length > 10).slice(0, 2)
   }
-  return sections.slice(1, 3)
+  if (sections.length >= 2) {
+    return sections.slice(1, 3).filter(s => s.body.length > 10)
+  }
+  return sections.slice(0, 2)
 }
 
 function extractVerdict(text: string): string {
@@ -167,14 +176,21 @@ export default function ShareCard({ result, title, mode, celebName, userName, la
           <div style={{ flex:1, height:'1px', background:'rgba(201,148,58,0.18)' }} />
         </div>
 
-        {highlights.map((h, i) => (
+        {highlights.length > 0 ? highlights.map((h, i) => (
           <div key={i} style={{ background:'rgba(138,79,168,0.08)', border:'1px solid rgba(138,79,168,0.18)', borderRadius:'10px', padding:'0.85rem 1rem', marginBottom: i < highlights.length-1 ? '0.7rem' : '1rem' }}>
             <div style={{ fontSize:'0.6rem', color:'#c4a0e8', letterSpacing:'0.15em', marginBottom:'0.35rem' }}>✦ {h.title}</div>
             <div style={{ fontSize:'0.78rem', color:'rgba(245,239,230,0.85)', lineHeight:1.7 }}>
               {h.body.length > 200 ? h.body.slice(0, 200) + '...' : h.body}
             </div>
           </div>
-        ))}
+        )) : (
+          // 파싱 실패 시 결과 앞부분 직접 표시
+          <div style={{ background:'rgba(138,79,168,0.08)', border:'1px solid rgba(138,79,168,0.18)', borderRadius:'10px', padding:'0.85rem 1rem', marginBottom:'1rem' }}>
+            <div style={{ fontSize:'0.78rem', color:'rgba(245,239,230,0.85)', lineHeight:1.7 }}>
+              {result.slice(0, 300).replace(/✦/g, '').trim()}{result.length > 300 ? '...' : ''}
+            </div>
+          </div>
+        )}
 
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', paddingTop:'0.8rem', borderTop:'1px solid rgba(201,148,58,0.12)' }}>
           <div style={{ fontSize:'0.58rem', color:'rgba(201,148,58,0.38)', letterSpacing:'0.15em' }}>unmyeong-tau.vercel.app</div>

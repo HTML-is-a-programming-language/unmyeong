@@ -152,6 +152,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
   const [time1, setTime1]               = useState('unknown')
   const [gender1, setGender1]           = useState('female')
   const [place1, setPlace1]             = useState('')
+  const [nickname, setNickname]         = useState('')
 
   // Person 2
   const [date2, setDate2]               = useState('')
@@ -320,6 +321,26 @@ export default function DashboardClient({ user, initialCredits }: Props) {
         <div className={styles.formCard}>
           {/* Person 1 */}
           <div className={styles.sectionTitle}>본인 정보</div>
+          <div className={styles.grid2} style={{marginBottom:'0.75rem'}}>
+            <div className={styles.field}>
+              <label>닉네임 (공유 카드에 표시)</label>
+              <input
+                type="text"
+                placeholder="예: 민지, Minji, みんじ"
+                value={nickname}
+                onChange={e => setNickname(e.target.value)}
+                maxLength={20}
+              />
+            </div>
+            <div className={styles.field}>
+              <label>성별</label>
+              <select value={gender1} onChange={e=>setGender1(e.target.value)}>
+                <option value="female">여 Female</option>
+                <option value="male">남 Male</option>
+                <option value="nonbinary">Non-binary</option>
+              </select>
+            </div>
+          </div>
           <div className={styles.grid3}>
             <div className={styles.field}>
               <label>생년월일</label>
@@ -339,19 +360,9 @@ export default function DashboardClient({ user, initialCredits }: Props) {
               </select>
             </div>
           </div>
-          <div className={styles.grid2}>
-            <div className={styles.field}>
-              <label>성별</label>
-              <select value={gender1} onChange={e=>setGender1(e.target.value)}>
-                <option value="female">여 Female</option>
-                <option value="male">남 Male</option>
-                <option value="nonbinary">Non-binary</option>
-              </select>
-            </div>
-            <div className={styles.field}>
-              <label>태어난 지역 (선택)</label>
-              <input type="text" placeholder="예: 서울, 부산" value={place1} onChange={e=>setPlace1(e.target.value)} />
-            </div>
+          <div className={styles.field}>
+            <label>태어난 지역 (선택)</label>
+            <input type="text" placeholder="예: 서울, 부산" value={place1} onChange={e=>setPlace1(e.target.value)} />
           </div>
 
           {/* Personal: category */}
@@ -496,7 +507,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
               title={resultTitle}
               mode={mode}
               celebName={mode === 'idol' ? (selectedIdol?.name || customName) : undefined}
-              userName={user.email.split('@')[0]}
+              userName={nickname || user.email.split('@')[0]}
               language={lang}
             />
           </>
