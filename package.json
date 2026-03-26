@@ -15,7 +15,8 @@
     "@supabase/ssr": "^0.4.0",
     "@anthropic-ai/sdk": "^0.24.3",
     "@paddle/paddle-node-sdk": "^1.5.0",
-    "html-to-image": "^1.11.11"
+    "html-to-image": "^1.11.11",
+    "openai": "^4.52.0"
   },
   "devDependencies": {
     "@types/node": "^20",

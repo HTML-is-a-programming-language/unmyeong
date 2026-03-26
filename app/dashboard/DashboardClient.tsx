@@ -178,6 +178,10 @@ export default function DashboardClient({ user, initialCredits }: Props) {
   const [toast, setToast]               = useState('')
   const [showBuyModal, setShowBuyModal] = useState(false)
 
+  // AI 이미지
+  const [generatingImage, setGeneratingImage] = useState(false)
+  const [generatedImage, setGeneratedImage]   = useState<string | null>(null)
+
   // ── 헬퍼 ────────────────────────────────────────
   function showToast(msg: string) {
     setToast(msg)
@@ -192,7 +196,27 @@ export default function DashboardClient({ user, initialCredits }: Props) {
 
   const costMap: Record<ReadingMode, number> = { personal: 1, compatibility: 2, idol: 3 }
 
-  async function handleSignOut() {
+  async function handleGenerateImage() {
+    if (!result) return
+    if (credits < 2) { setShowBuyModal(true); return }
+
+    setGeneratingImage(true)
+    try {
+      const res = await fetch('/api/generate-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sajuResult: result, mode, language: lang }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || '오류가 발생했어요.')
+      setGeneratedImage(data.imageUrl)
+      setCredits(data.remainingCredits)
+    } catch (e: unknown) {
+      showToast(e instanceof Error ? e.message : '이미지 생성 중 오류가 발생했어요.')
+    } finally {
+      setGeneratingImage(false)
+    }
+  }
     await supabase.auth.signOut()
     router.push('/login')
   }
@@ -214,6 +238,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
 
     setLoading(true)
     setResult(null)
+    setGeneratedImage(null)
 
     try {
       const body = {
@@ -502,6 +527,60 @@ export default function DashboardClient({ user, initialCredits }: Props) {
               </div>
               <div className={styles.resultBody}>{result}</div>
             </div>
+
+            {/* AI 이미지 생성 버튼 */}
+            {!generatedImage && (
+              <button
+                className={styles.btnSubmit}
+                style={{ marginTop:'0.75rem', background: generatingImage ? '#555' : '#3C3489' }}
+                onClick={handleGenerateImage}
+                disabled={generatingImage}
+              >
+                {generatingImage
+                  ? '✦ AI 이미지 생성 중... (20~30초 소요)'
+                  : '✦ 사주를 AI 이미지로 표현하기 · 2 credits'}
+              </button>
+            )}
+
+            {/* 생성된 AI 이미지 */}
+            {generatedImage && (
+              <div className={styles.resultCard} style={{ marginTop:'0.75rem', overflow:'hidden' }}>
+                <div className={styles.resultHeader}>
+                  <div className={styles.resultTitle}>✦ AI가 그린 나의 사주</div>
+                </div>
+                <div style={{ position:'relative' }}>
+                  <img
+                    src={generatedImage}
+                    alt="AI generated saju art"
+                    style={{ width:'100%', display:'block' }}
+                  />
+                  <div style={{ padding:'0.8rem 1rem', display:'flex', gap:'0.6rem', justifyContent:'flex-end', borderTop:'1px solid var(--border)' }}>
+                    <button
+                      className={styles.btnCopy}
+                      onClick={() => {
+                        const a = document.createElement('a')
+                        a.href = generatedImage
+                        a.download = `unmyeong-art-${Date.now()}.png`
+                        a.target = '_blank'
+                        a.click()
+                      }}
+                    >
+                      이미지 저장
+                    </button>
+                    <button
+                      className={styles.btnTwitter}
+                      onClick={() => {
+                        const text = `✦ AI가 그린 나의 사주 에너지\n\nunmyeong-tau.vercel.app\n#Saju #KoreanFortune #AIArt #Unmyeong`
+                        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
+                      }}
+                    >
+                      X 공유
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <ShareCard
               result={result}
               title={resultTitle}
