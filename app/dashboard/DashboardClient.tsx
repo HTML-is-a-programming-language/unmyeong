@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import type { ReadingMode, ReadingCategory, Celebrity } from '@/types'
 import styles from './dashboard.module.css'
 import BuyCreditsModal from '@/components/BuyCreditsModal'
+import ShareCard from '@/components/ShareCard'
 
 // ── 상수 데이터 ──────────────────────────────────────────────────
 
@@ -482,17 +483,22 @@ export default function DashboardClient({ user, initialCredits }: Props) {
 
         {/* Result */}
         {result && (
-          <div className={styles.resultCard}>
-            <div className={styles.resultHeader}>
-              <div className={styles.resultTitle}>{resultTitle} 사주 결과</div>
-              <div className={styles.resultEmail}>{user.email}</div>
+          <>
+            <div className={styles.resultCard}>
+              <div className={styles.resultHeader}>
+                <div className={styles.resultTitle}>{resultTitle} 사주 결과</div>
+                <div className={styles.resultEmail}>{user.email}</div>
+              </div>
+              <div className={styles.resultBody}>{result}</div>
             </div>
-            <div className={styles.resultBody}>{result}</div>
-            <div className={styles.resultActions}>
-              <button className={styles.btnCopy} onClick={handleCopy}>복사</button>
-              <button className={styles.btnTwitter} onClick={handleShare}>X 공유</button>
-            </div>
-          </div>
+            <ShareCard
+              result={result}
+              title={resultTitle}
+              mode={mode}
+              celebName={mode === 'idol' ? (selectedIdol?.name || customName) : undefined}
+              language={lang}
+            />
+          </>
         )}
       </div>
 

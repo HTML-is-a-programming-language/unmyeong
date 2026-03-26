@@ -1,0 +1,178 @@
+.wrapper {
+  margin-top: 1.5rem;
+}
+
+/* ── 공유 카드 (이미지로 변환될 영역) ── */
+.card {
+  background: #1a0a00;
+  border: 1px solid rgba(201,148,58,0.4);
+  border-radius: 16px;
+  padding: 2rem 1.8rem;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Noto Serif KR', 'Noto Sans', Georgia, serif;
+}
+
+/* 배경 장식 */
+.card::before {
+  content: '命';
+  position: absolute;
+  right: -20px;
+  top: -20px;
+  font-size: 160px;
+  color: rgba(201,148,58,0.04);
+  font-family: 'Noto Serif KR', serif;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #c9943a, transparent);
+}
+
+/* 헤더 */
+.cardHeader {
+  text-align: center;
+  margin-bottom: 1.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(201,148,58,0.2);
+}
+
+.cardLogo {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 2rem;
+  font-weight: 300;
+  color: #c9943a;
+  letter-spacing: 0.3em;
+}
+
+.cardLogoEn {
+  font-size: 0.65rem;
+  letter-spacing: 0.5em;
+  color: rgba(201,148,58,0.6);
+  margin-top: 0.2rem;
+  font-family: 'Georgia', serif;
+}
+
+.cardTagline {
+  font-size: 0.7rem;
+  color: rgba(245,239,230,0.4);
+  margin-top: 0.3rem;
+  letter-spacing: 0.15em;
+}
+
+/* 배지 */
+.cardBadge {
+  display: inline-block;
+  background: rgba(201,148,58,0.15);
+  border: 1px solid rgba(201,148,58,0.35);
+  color: #c9943a;
+  font-size: 0.72rem;
+  padding: 0.25rem 0.9rem;
+  border-radius: 20px;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.6rem;
+}
+
+.cardCeleb {
+  font-size: 0.9rem;
+  color: rgba(245,239,230,0.7);
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+}
+
+/* 결과 내용 */
+.cardContent {
+  font-size: 0.82rem;
+  line-height: 1.85;
+  color: rgba(245,239,230,0.88);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.cardContent strong,
+.cardContent b {
+  color: #c9943a;
+}
+
+/* 구분선 */
+.cardDivider {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  margin: 1.2rem 0 1rem;
+  font-size: 0.75rem;
+  color: rgba(201,148,58,0.4);
+  letter-spacing: 0.2em;
+  font-family: 'Noto Serif KR', serif;
+}
+
+/* 푸터 */
+.cardFooter {
+  text-align: center;
+  font-size: 0.65rem;
+  color: rgba(201,148,58,0.5);
+  letter-spacing: 0.2em;
+}
+
+/* ── 공유 버튼들 ── */
+.actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.btnSave,
+.btnTwitter,
+.btnShare {
+  flex: 1;
+  min-width: 100px;
+  padding: 0.65rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-display);
+  letter-spacing: 0.05em;
+  border: 1px solid;
+}
+
+.btnSave {
+  background: var(--ink, #1a0a00);
+  color: var(--paper, #f5efe6);
+  border-color: var(--ink, #1a0a00);
+}
+.btnSave:hover:not(:disabled) { background: var(--red, #8b1a1a); border-color: var(--red, #8b1a1a); }
+
+.btnTwitter {
+  background: transparent;
+  color: #1da1f2;
+  border-color: #1da1f2;
+}
+.btnTwitter:hover:not(:disabled) { background: #1da1f2; color: white; }
+
+.btnShare {
+  background: transparent;
+  color: var(--gold, #c9943a);
+  border-color: var(--gold, #c9943a);
+}
+.btnShare:hover:not(:disabled) { background: var(--gold, #c9943a); color: white; }
+
+.btnSave:disabled,
+.btnTwitter:disabled,
+.btnShare:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 420px) {
+  .actions { flex-direction: column; }
+  .btnSave, .btnTwitter, .btnShare { flex: none; width: 100%; }
+}
