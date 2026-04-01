@@ -234,8 +234,10 @@ export default function DashboardClient({ user, initialCredits }: Props) {
   const [showBuyModal, setShowBuyModal] = useState(false)
 
   // AI 이미지
-  const [generatingImage, setGeneratingImage] = useState(false)
-  const [generatedImage, setGeneratedImage]   = useState<string | null>(null)
+  const [generatingImage, setGeneratingImage]     = useState(false)
+  const [generatedImage, setGeneratedImage]       = useState<string | null>(null)
+  const [generatingBaby, setGeneratingBaby]       = useState(false)
+  const [generatedBabyImage, setGeneratedBabyImage] = useState<string | null>(null)
 
   // ── 헬퍼 ────────────────────────────────────────
   function showToast(msg: string) {
@@ -265,7 +267,13 @@ export default function DashboardClient({ user, initialCredits }: Props) {
       const res = await fetch('/api/generate-image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sajuResult: result, mode, language: lang }),
+        body: JSON.stringify({
+          sajuResult: result,
+          mode,
+          language: lang,
+          gender: gender1,
+          category: mode === 'personal' ? readingCat : undefined,
+        }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || '오류가 발생했어요.')
@@ -275,6 +283,33 @@ export default function DashboardClient({ user, initialCredits }: Props) {
       showToast(e instanceof Error ? e.message : '이미지 생성 중 오류가 발생했어요.')
     } finally {
       setGeneratingImage(false)
+    }
+  }
+
+  async function handleGenerateBabyImage() {
+    if (!result) return
+    if (credits < 3) { setShowBuyModal(true); return }
+
+    setGeneratingBaby(true)
+    try {
+      const res = await fetch('/api/generate-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sajuResult: result,
+          mode: 'baby',
+          language: lang,
+          gender: 'female',
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || '오류가 발생했어요.')
+      setGeneratedBabyImage(data.imageUrl)
+      setCredits(data.remainingCredits)
+    } catch (e: unknown) {
+      showToast(e instanceof Error ? e.message : '이미지 생성 중 오류가 발생했어요.')
+    } finally {
+      setGeneratingBaby(false)
     }
   }
 
@@ -293,9 +328,20 @@ export default function DashboardClient({ user, initialCredits }: Props) {
       if (!showCustom && !selectedIdol) { showToast(t(lang, 'selectCeleb')); return }
     }
 
+    // 개인 사주: 이미 결과가 있으면 재소비 확인
+    if (mode === 'personal' && result) {
+      const confirmed = window.confirm(
+        lang === 'Korean'
+          ? `이미 결과가 있어요. 다시 보기하면 ${cost} 크레딧이 추가로 소비됩니다. 계속할까요?`
+          : `You already have a result. Viewing again will cost ${cost} more credit${cost > 1 ? 's' : ''}. Continue?`
+      )
+      if (!confirmed) return
+    }
+
     setLoading(true)
     setResult(null)
     setGeneratedImage(null)
+    setGeneratedBabyImage(null)
 
     try {
       const body = {
@@ -535,7 +581,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
               {showCustom && (
                 <div className={styles.customBox}>
                   <div className={styles.grid3}>
-                    <div className={styles.field}><label>{t(lang,'celebName')}</label><input type="text" placeholder={t(lang,'celebNamePlaceholder')} value={customName} onChange={e=>setCustomName(e.target.value)}/></div>
+                    <div className={styles.field}><label>{t(lang,'celebName')}</label><input type="text" placeholder={lang === 'Korean' ? '예: Taylor Swift, 뷔, Ariana Grande' : 'e.g. Taylor Swift, V, Ariana Grande'} value={customName} onChange={e=>setCustomName(e.target.value)}/></div>
                     <div className={styles.field}><label>{t(lang,'celebBirth')}</label><input type="date" value={customBirth} onChange={e=>setCustomBirth(e.target.value)}/></div>
                     <div className={styles.field}><label>{t(lang,'celebGender')}</label>
                       <select value={customGender} onChange={e=>setCustomGender(e.target.value)}>
@@ -544,7 +590,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
                       </select>
                     </div>
                   </div>
-                  <div className={styles.field} style={{marginTop:'0.6rem'}}><label>{t(lang,'celebGroup')}</label><input type="text" placeholder={t(lang,'celebGroupPlaceholder')} value={customGroup} onChange={e=>setCustomGroup(e.target.value)}/></div>
+                  <div className={styles.field} style={{marginTop:'0.6rem'}}><label>{t(lang,'celebGroup')}</label><input type="text" placeholder={lang === 'Korean' ? '예: Solo Artist, The 1975, NewJeans (선택)' : 'e.g. Solo Artist, The 1975, NewJeans (optional)'} value={customGroup} onChange={e=>setCustomGroup(e.target.value)}/></div>
                 </div>
               )}
             </>
@@ -581,9 +627,23 @@ export default function DashboardClient({ user, initialCredits }: Props) {
                 className={styles.btnSubmit}
                 style={{ marginTop:'0.75rem', background: generatingImage ? '#555' : '#3C3489' }}
                 onClick={handleGenerateImage}
-                disabled={generatingImage}
+                disabled={generatingImage || generatingBaby}
               >
                 {generatingImage ? t(lang,'aiImageLoading') : `${t(lang,'aiImageBtn')} · 3 credits`}
+              </button>
+            )}
+
+            {/* 2세 이미지 버튼 — 궁합/아이돌 전용 */}
+            {(mode === 'compatibility' || mode === 'idol') && !generatedBabyImage && (
+              <button
+                className={styles.btnSubmit}
+                style={{ marginTop:'0.5rem', background: generatingBaby ? '#555' : '#5C3D8F' }}
+                onClick={handleGenerateBabyImage}
+                disabled={generatingImage || generatingBaby}
+              >
+                {generatingBaby
+                  ? (lang === 'Korean' ? '2세 이미지 만드는 중...' : 'Generating baby image...')
+                  : (lang === 'Korean' ? '✦ 우리의 2세 이미지 보기 · 3 credits' : '✦ Our Future Child · 3 credits')}
               </button>
             )}
 
@@ -616,6 +676,49 @@ export default function DashboardClient({ user, initialCredits }: Props) {
                       className={styles.btnTwitter}
                       onClick={() => {
                         const text = `✦ ${t(lang,'aiImageTitle')}\n\nunmyeong-tau.vercel.app\n#Saju #KoreanFortune #AIArt #Unmyeong`
+                        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
+                      }}
+                    >
+                      {t(lang,'shareX')}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 생성된 2세 이미지 */}
+            {generatedBabyImage && (
+              <div className={styles.resultCard} style={{ marginTop:'0.75rem', overflow:'hidden' }}>
+                <div className={styles.resultHeader}>
+                  <div className={styles.resultTitle}>
+                    {lang === 'Korean' ? '✦ 우리의 운명적 2세' : '✦ Our Destined Child'}
+                  </div>
+                </div>
+                <div style={{ position:'relative' }}>
+                  <img
+                    src={generatedBabyImage}
+                    alt="AI generated baby art"
+                    style={{ width:'100%', display:'block' }}
+                  />
+                  <div style={{ padding:'0.8rem 1rem', display:'flex', gap:'0.6rem', justifyContent:'flex-end', borderTop:'1px solid var(--border)' }}>
+                    <button
+                      className={styles.btnCopy}
+                      onClick={() => {
+                        const a = document.createElement('a')
+                        a.href = generatedBabyImage
+                        a.download = `unmyeong-baby-${Date.now()}.png`
+                        a.target = '_blank'
+                        a.click()
+                      }}
+                    >
+                      {t(lang,'saveImage')}
+                    </button>
+                    <button
+                      className={styles.btnTwitter}
+                      onClick={() => {
+                        const text = lang === 'Korean'
+                          ? `✦ 우리의 운명적 2세\n\nunmyeong-tau.vercel.app\n#사주 #궁합 #AIArt #Unmyeong`
+                          : `✦ Our Destined Child by Korean Saju\n\nunmyeong-tau.vercel.app\n#Saju #Compatibility #AIArt #Unmyeong`
                         window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
                       }}
                     >
