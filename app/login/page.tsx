@@ -80,7 +80,10 @@ export default function LoginPage() {
         {error && <p className={styles.error}>{error}</p>}
 
         <p className={styles.terms}>
-          By continuing, you agree to our Terms of Service and Privacy Policy.
+          By continuing, you agree to our{' '}
+          <a href="/terms" style={{ color: 'var(--gold)', textDecoration: 'underline' }}>Terms of Service</a>
+          {' '}and{' '}
+          <a href="/privacy" style={{ color: 'var(--gold)', textDecoration: 'underline' }}>Privacy Policy</a>.
         </p>
 
         <div className={styles.features}>
