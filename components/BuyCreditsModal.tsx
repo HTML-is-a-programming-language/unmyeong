@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { getPaddleInstance } from '@paddle/paddle-js'
 import { CREDIT_PACKAGES } from '@/lib/packages'
 import type { PackageId } from '@/lib/packages'
 import styles from './BuyCreditsModal.module.css'
@@ -22,9 +23,15 @@ export default function BuyCreditsModal({ onClose }: Props) {
       })
       const data = await res.json()
 
-      if (data.checkoutUrl) {
-        // Paddle 결제 페이지로 이동
-        window.location.href = data.checkoutUrl
+      if (data.transactionId) {
+        const paddle = getPaddleInstance()
+        if (!paddle) {
+          alert('결제 모듈을 불러오지 못했어요. 새로고침 후 시도해주세요.')
+          setLoading(null)
+          return
+        }
+        onClose()
+        paddle.Checkout.open({ transactionId: data.transactionId })
       } else {
         alert(data.error || '오류가 발생했어요.')
         setLoading(null)

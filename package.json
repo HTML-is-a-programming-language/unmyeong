@@ -8,15 +8,16 @@
     "start": "next start"
   },
   "dependencies": {
-    "next": "14.2.5",
-    "react": "^18",
-    "react-dom": "^18",
-    "@supabase/supabase-js": "^2.44.4",
-    "@supabase/ssr": "^0.4.0",
     "@anthropic-ai/sdk": "^0.24.3",
+    "@paddle/paddle-js": "^1.6.2",
     "@paddle/paddle-node-sdk": "^1.5.0",
+    "@supabase/ssr": "^0.4.0",
+    "@supabase/supabase-js": "^2.44.4",
     "html-to-image": "^1.11.11",
-    "openai": "^4.52.0"
+    "next": "14.2.5",
+    "openai": "^4.52.0",
+    "react": "^18",
+    "react-dom": "^18"
   },
   "devDependencies": {
     "@types/node": "^20",
