@@ -199,7 +199,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
   const [credits, setCredits]           = useState(initialCredits)
   const [mode, setMode]                 = useState<ReadingMode>('personal')
   const [lang, setLang]                 = useState('Korean')
-  const [readingCat, setReadingCat]     = useState<ReadingCategory | null>(null)
+  const [readingCats, setReadingCats]   = useState<ReadingCategory[]>([])
 
   // Person 1
   const [date1, setDate1]               = useState('')
@@ -239,6 +239,19 @@ export default function DashboardClient({ user, initialCredits }: Props) {
   const [generatingBaby, setGeneratingBaby]       = useState(false)
   const [generatedBabyImage, setGeneratedBabyImage] = useState<string | null>(null)
 
+  // 2세 이미지용 얼굴 사진 업로드
+  const [face1File, setFace1File]   = useState<File | null>(null)
+  const [face2File, setFace2File]   = useState<File | null>(null)
+  const [face1Preview, setFace1Preview] = useState<string | null>(null)
+  const [face2Preview, setFace2Preview] = useState<string | null>(null)
+
+  function handleFaceUpload(slot: 1 | 2, file: File | null) {
+    if (!file) return
+    const url = URL.createObjectURL(file)
+    if (slot === 1) { setFace1File(file); setFace1Preview(url) }
+    else            { setFace2File(file); setFace2Preview(url) }
+  }
+
   // ── 헬퍼 ────────────────────────────────────────
   function showToast(msg: string) {
     setToast(msg)
@@ -251,7 +264,9 @@ export default function DashboardClient({ user, initialCredits }: Props) {
     return GROUPS[selectedGroup] ?? []
   }
 
-  const costMap: Record<ReadingMode, number> = { personal: 1, compatibility: 2, idol: 3 }
+  const baseCostMap: Record<ReadingMode, number> = { personal: 1, compatibility: 2, idol: 3 }
+  const personalCost = mode === 'personal' ? Math.max(1, readingCats.length) : baseCostMap[mode]
+  const costMap: Record<ReadingMode, number> = { ...baseCostMap, personal: personalCost }
 
   async function handleSignOut() {
     await supabase.auth.signOut()
@@ -272,7 +287,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
           mode,
           language: lang,
           gender: gender1,
-          category: mode === 'personal' ? readingCat : undefined,
+          category: mode === 'personal' ? readingCats[0] : undefined,
         }),
       })
       const data = await res.json()
@@ -287,20 +302,21 @@ export default function DashboardClient({ user, initialCredits }: Props) {
   }
 
   async function handleGenerateBabyImage() {
-    if (!result) return
+    if (!result || !face1File || !face2File) return
     if (credits < 3) { setShowBuyModal(true); return }
 
     setGeneratingBaby(true)
     try {
-      const res = await fetch('/api/generate-image', {
+      const formData = new FormData()
+      formData.append('sajuResult', result)
+      formData.append('mode', 'baby')
+      formData.append('language', lang)
+      formData.append('face1', face1File)
+      formData.append('face2', face2File)
+
+      const res = await fetch('/api/generate-baby-image', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sajuResult: result,
-          mode: 'baby',
-          language: lang,
-          gender: 'female',
-        }),
+        body: formData,
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || '오류가 발생했어요.')
@@ -321,7 +337,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
       return
     }
     if (!date1) { showToast(t(lang, 'enterBirth')); return }
-    if (mode === 'personal' && !readingCat) { showToast(t(lang, 'selectReading')); return }
+    if (mode === 'personal' && readingCats.length === 0) { showToast(t(lang, 'selectReading')); return }
     if (mode === 'compatibility' && !date2) { showToast(t(lang, 'enterPartnerBirth')); return }
     if (mode === 'idol') {
       if (showCustom && (!customName || !customBirth)) { showToast(t(lang, 'enterCelebInfo')); return }
@@ -334,6 +350,17 @@ export default function DashboardClient({ user, initialCredits }: Props) {
         lang === 'Korean'
           ? `이미 결과가 있어요. 다시 보기하면 ${cost} 크레딧이 추가로 소비됩니다. 계속할까요?`
           : `You already have a result. Viewing again will cost ${cost} more credit${cost > 1 ? 's' : ''}. Continue?`
+      )
+      if (!confirmed) return
+    }
+
+    // 다중 카테고리 선택 시 확인
+    if (mode === 'personal' && readingCats.length > 1) {
+      const catNames = readingCats.map(c => t(lang, c)).join(', ')
+      const confirmed = window.confirm(
+        lang === 'Korean'
+          ? `${catNames} — ${readingCats.length}가지 항목을 보면 ${cost} 크레딧이 소비됩니다. 계속할까요?`
+          : `${catNames} — ${readingCats.length} readings will cost ${cost} credits. Continue?`
       )
       if (!confirmed) return
     }
@@ -356,7 +383,8 @@ export default function DashboardClient({ user, initialCredits }: Props) {
             ? { name: customName, group: customGroup || 'Korean celebrity', birth: customBirth, gender: customGender }
             : { name: selectedIdol!.name, group: selectedIdol!.group, birth: selectedIdol!.birth, gender: selectedIdol!.gender },
         }),
-        ...(mode === 'personal' && { category: readingCat }),
+        ...(mode === 'personal' && readingCats.length === 1 && { category: readingCats[0] }),
+        ...(mode === 'personal' && readingCats.length > 1  && { categories: readingCats }),
       }
 
       const res = await fetch('/api/saju', {
@@ -372,7 +400,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
       setResult(data.reading)
 
       const catLabel = mode === 'personal'
-        ? t(lang, readingCat ?? '')
+        ? readingCats.map(c => t(lang, c)).join(' · ')
         : mode === 'compatibility' ? t(lang, 'compatibility') : t(lang, 'idol')
       setResultTitle(catLabel)
 
@@ -381,7 +409,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
     } finally {
       setLoading(false)
     }
-  }, [mode, lang, credits, date1, date2, calendar1, calendar2, time1, time2, gender1, gender2, place1, readingCat, selectedIdol, showCustom, customName, customBirth, customGender, customGroup])
+  }, [mode, lang, credits, date1, date2, calendar1, calendar2, time1, time2, gender1, gender2, place1, readingCats, selectedIdol, showCustom, customName, customBirth, customGender, customGroup, result])
 
   function handleCopy() {
     if (result) {
@@ -487,21 +515,41 @@ export default function DashboardClient({ user, initialCredits }: Props) {
             <input type="text" placeholder={t(lang,'birthPlacePlaceholder')} value={place1} onChange={e=>setPlace1(e.target.value)} />
           </div>
 
-          {/* Personal: category */}
+          {/* Personal: category — 최대 3개 다중선택 */}
           {mode === 'personal' && (
             <>
-              <div className={styles.sectionTitle} style={{marginTop:'1.2rem'}}>{t(lang,'readingType')}</div>
+              <div className={styles.sectionTitle} style={{marginTop:'1.2rem'}}>
+                {t(lang,'readingType')}
+                <span style={{ marginLeft:'0.5rem', fontSize:'0.72rem', color:'var(--muted)', fontWeight:400 }}>
+                  {lang === 'Korean'
+                    ? `최대 3개 선택 가능 · 선택한 항목 수만큼 크레딧 소비 (현재 ${readingCats.length}개 선택 = ${Math.max(1, readingCats.length)} credit${readingCats.length > 1 ? 's' : ''})`
+                    : `Up to 3 · ${Math.max(1, readingCats.length)} credit${readingCats.length > 1 ? 's' : ''} (${readingCats.length} selected)`}
+                </span>
+              </div>
               <div className={styles.catGrid}>
-                {READING_CATEGORY_IDS.map(id => (
-                  <button
-                    key={id}
-                    className={`${styles.catBtn} ${readingCat===id ? styles.catBtnActive : ''}`}
-                    onClick={() => setReadingCat(id as ReadingCategory)}
-                  >
-                    <span className={styles.catKr}>{t(lang, id)}</span>
-                    {lang === 'Korean' ? null : <span className={styles.catEn}>{t('Korean', id)}</span>}
-                  </button>
-                ))}
+                {READING_CATEGORY_IDS.map(id => {
+                  const selected = readingCats.includes(id as ReadingCategory)
+                  const maxed = !selected && readingCats.length >= 3
+                  return (
+                    <button
+                      key={id}
+                      className={`${styles.catBtn} ${selected ? styles.catBtnActive : ''}`}
+                      style={maxed ? { opacity: 0.4, cursor: 'not-allowed' } : {}}
+                      disabled={maxed}
+                      onClick={() => {
+                        if (selected) {
+                          setReadingCats(prev => prev.filter(c => c !== id))
+                        } else if (readingCats.length < 3) {
+                          setReadingCats(prev => [...prev, id as ReadingCategory])
+                        }
+                      }}
+                    >
+                      {selected && <span style={{ marginRight:'0.3rem', fontSize:'0.7rem' }}>✦</span>}
+                      <span className={styles.catKr}>{t(lang, id)}</span>
+                      {lang === 'Korean' ? null : <span className={styles.catEn}>{t('Korean', id)}</span>}
+                    </button>
+                  )
+                })}
               </div>
             </>
           )}
@@ -599,7 +647,9 @@ export default function DashboardClient({ user, initialCredits }: Props) {
 
         {/* Submit */}
         <button className={styles.btnSubmit} onClick={handleSubmit} disabled={loading}>
-          {loading ? t(lang,'reading') : `${t(lang,'submit')} · ${costMap[mode]} ${t(lang,'creditUnit')}`}
+          {loading
+            ? t(lang,'reading')
+            : `${t(lang,'submit')} · ${costMap[mode]} ${t(lang,'creditUnit')}${costMap[mode] > 1 ? 's' : ''}`}
         </button>
 
         {/* Loading */}
@@ -633,18 +683,92 @@ export default function DashboardClient({ user, initialCredits }: Props) {
               </button>
             )}
 
-            {/* 2세 이미지 버튼 — 궁합/아이돌 전용 */}
-            {(mode === 'compatibility' || mode === 'idol') && !generatedBabyImage && (
-              <button
-                className={styles.btnSubmit}
-                style={{ marginTop:'0.5rem', background: generatingBaby ? '#555' : '#5C3D8F' }}
-                onClick={handleGenerateBabyImage}
-                disabled={generatingImage || generatingBaby}
-              >
-                {generatingBaby
-                  ? (lang === 'Korean' ? '2세 이미지 만드는 중...' : 'Generating baby image...')
-                  : (lang === 'Korean' ? '✦ 우리의 2세 이미지 보기 · 3 credits' : '✦ Our Future Child · 3 credits')}
-              </button>
+            {/* 2세 이미지 섹션 — 궁합/아이돌 전용 */}
+            {(mode === 'compatibility' || mode === 'idol') && (
+              <div className={styles.resultCard} style={{ marginTop:'0.75rem', padding:'1rem' }}>
+                <div className={styles.sectionTitle} style={{ marginBottom:'0.75rem' }}>
+                  {lang === 'Korean' ? '✦ 우리의 운명적 2세 — 얼굴 사진으로 예측' : '✦ Our Destined Child — Face Photo Prediction'}
+                </div>
+                <div style={{ fontSize:'0.78rem', color:'var(--muted)', marginBottom:'0.9rem' }}>
+                  {lang === 'Korean'
+                    ? '두 사람의 얼굴 사진을 업로드하면 사주를 바탕으로 예상 2세 이미지를 생성합니다 · 3 credits'
+                    : 'Upload two face photos to generate a predicted future child based on your Saju · 3 credits'}
+                </div>
+                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0.75rem', marginBottom:'0.9rem' }}>
+                  {/* 사진 1 */}
+                  <div>
+                    <label style={{ fontSize:'0.78rem', color:'var(--muted)', display:'block', marginBottom:'0.4rem' }}>
+                      {lang === 'Korean' ? '내 사진' : 'My Photo'}
+                    </label>
+                    <label style={{
+                      display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+                      border:'1px dashed var(--border)', borderRadius:'8px', cursor:'pointer',
+                      height:'120px', overflow:'hidden', background:'var(--paper)',
+                    }}>
+                      {face1Preview
+                        ? <img src={face1Preview} alt="face 1" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
+                        : <span style={{ color:'var(--muted)', fontSize:'0.8rem', textAlign:'center', padding:'0.5rem' }}>
+                            {lang === 'Korean' ? '클릭하여 업로드' : 'Click to upload'}
+                          </span>}
+                      <input type="file" accept="image/*" style={{ display:'none' }}
+                        onChange={e => handleFaceUpload(1, e.target.files?.[0] ?? null)} />
+                    </label>
+                  </div>
+                  {/* 사진 2 */}
+                  <div>
+                    <label style={{ fontSize:'0.78rem', color:'var(--muted)', display:'block', marginBottom:'0.4rem' }}>
+                      {lang === 'Korean' ? (mode === 'compatibility' ? '상대방 사진' : '셀럽 사진') : (mode === 'compatibility' ? 'Partner Photo' : 'Celeb Photo')}
+                    </label>
+                    <label style={{
+                      display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+                      border:'1px dashed var(--border)', borderRadius:'8px', cursor:'pointer',
+                      height:'120px', overflow:'hidden', background:'var(--paper)',
+                    }}>
+                      {face2Preview
+                        ? <img src={face2Preview} alt="face 2" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
+                        : <span style={{ color:'var(--muted)', fontSize:'0.8rem', textAlign:'center', padding:'0.5rem' }}>
+                            {lang === 'Korean' ? '클릭하여 업로드' : 'Click to upload'}
+                          </span>}
+                      <input type="file" accept="image/*" style={{ display:'none' }}
+                        onChange={e => handleFaceUpload(2, e.target.files?.[0] ?? null)} />
+                    </label>
+                  </div>
+                </div>
+                {!generatedBabyImage && (
+                  <button
+                    className={styles.btnSubmit}
+                    style={{ width:'100%', background: generatingBaby ? '#555' : '#5C3D8F' }}
+                    onClick={handleGenerateBabyImage}
+                    disabled={generatingImage || generatingBaby || !face1File || !face2File}
+                  >
+                    {generatingBaby
+                      ? (lang === 'Korean' ? '2세 이미지 만드는 중...' : 'Generating...')
+                      : (!face1File || !face2File)
+                        ? (lang === 'Korean' ? '사진 2장을 먼저 업로드해주세요' : 'Upload both photos first')
+                        : (lang === 'Korean' ? '✦ 2세 이미지 생성 · 3 credits' : '✦ Generate Baby Image · 3 credits')}
+                  </button>
+                )}
+                {generatedBabyImage && (
+                  <div style={{ marginTop:'0.75rem', borderRadius:'8px', overflow:'hidden', border:'1px solid var(--border)' }}>
+                    <img src={generatedBabyImage} alt="baby prediction" style={{ width:'100%', display:'block' }} />
+                    <div style={{ padding:'0.8rem', display:'flex', gap:'0.6rem', justifyContent:'flex-end' }}>
+                      <button className={styles.btnCopy} onClick={() => {
+                        const a = document.createElement('a')
+                        a.href = generatedBabyImage
+                        a.download = `unmyeong-baby-${Date.now()}.png`
+                        a.target = '_blank'
+                        a.click()
+                      }}>{t(lang,'saveImage')}</button>
+                      <button className={styles.btnTwitter} onClick={() => {
+                        const text = lang === 'Korean'
+                          ? `✦ 우리의 운명적 2세\n\nunmyeong-tau.vercel.app\n#사주 #궁합 #AIArt #Unmyeong`
+                          : `✦ Our Destined Child by Korean Saju\n\nunmyeong-tau.vercel.app\n#Saju #Compatibility #AIArt #Unmyeong`
+                        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
+                      }}>{t(lang,'shareX')}</button>
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
 
             {/* 생성된 AI 이미지 */}
@@ -686,48 +810,6 @@ export default function DashboardClient({ user, initialCredits }: Props) {
               </div>
             )}
 
-            {/* 생성된 2세 이미지 */}
-            {generatedBabyImage && (
-              <div className={styles.resultCard} style={{ marginTop:'0.75rem', overflow:'hidden' }}>
-                <div className={styles.resultHeader}>
-                  <div className={styles.resultTitle}>
-                    {lang === 'Korean' ? '✦ 우리의 운명적 2세' : '✦ Our Destined Child'}
-                  </div>
-                </div>
-                <div style={{ position:'relative' }}>
-                  <img
-                    src={generatedBabyImage}
-                    alt="AI generated baby art"
-                    style={{ width:'100%', display:'block' }}
-                  />
-                  <div style={{ padding:'0.8rem 1rem', display:'flex', gap:'0.6rem', justifyContent:'flex-end', borderTop:'1px solid var(--border)' }}>
-                    <button
-                      className={styles.btnCopy}
-                      onClick={() => {
-                        const a = document.createElement('a')
-                        a.href = generatedBabyImage
-                        a.download = `unmyeong-baby-${Date.now()}.png`
-                        a.target = '_blank'
-                        a.click()
-                      }}
-                    >
-                      {t(lang,'saveImage')}
-                    </button>
-                    <button
-                      className={styles.btnTwitter}
-                      onClick={() => {
-                        const text = lang === 'Korean'
-                          ? `✦ 우리의 운명적 2세\n\nunmyeong-tau.vercel.app\n#사주 #궁합 #AIArt #Unmyeong`
-                          : `✦ Our Destined Child by Korean Saju\n\nunmyeong-tau.vercel.app\n#Saju #Compatibility #AIArt #Unmyeong`
-                        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank')
-                      }}
-                    >
-                      {t(lang,'shareX')}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
 
             <ShareCard
               result={result}

@@ -270,8 +270,11 @@ export async function POST(request: Request) {
     const body: ReadingRequest = await request.json()
 
     // 2. 크레딧 확인 및 차감 (서버에서만 처리 — 클라이언트 조작 불가)
-    const costMap = { personal: 1, compatibility: 2, idol: 3 }
-    const cost = costMap[body.mode]
+    const baseCostMap = { personal: 1, compatibility: 2, idol: 3 }
+    const multiCount = (body.mode === 'personal' && body.categories && body.categories.length > 1)
+      ? body.categories.length
+      : 1
+    const cost = baseCostMap[body.mode] * multiCount
 
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
@@ -298,18 +301,35 @@ export async function POST(request: Request) {
     }
 
     // 4. 프롬프트 생성 및 Claude 호출
-    let prompt = ''
-    if (body.mode === 'personal')        prompt = buildPersonalPrompt(body)
-    else if (body.mode === 'compatibility') prompt = buildCompatPrompt(body)
-    else if (body.mode === 'idol')       prompt = buildIdolPrompt(body)
+    let reading = ''
 
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 2000,
-      messages: [{ role: 'user', content: prompt }],
-    })
+    if (body.mode === 'personal' && body.categories && body.categories.length > 1) {
+      // 다중 카테고리: 순서대로 호출 후 결합
+      const readings: string[] = []
+      for (const cat of body.categories) {
+        const catBody = { ...body, category: cat }
+        const catPrompt = buildPersonalPrompt(catBody)
+        const catResponse = await anthropic.messages.create({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 2000,
+          messages: [{ role: 'user', content: catPrompt }],
+        })
+        readings.push(catResponse.content[0].type === 'text' ? catResponse.content[0].text : '')
+      }
+      reading = readings.join('\n\n─────────────────────────\n\n')
+    } else {
+      let prompt = ''
+      if (body.mode === 'personal')           prompt = buildPersonalPrompt(body)
+      else if (body.mode === 'compatibility') prompt = buildCompatPrompt(body)
+      else if (body.mode === 'idol')          prompt = buildIdolPrompt(body)
 
-    const reading = response.content[0].type === 'text' ? response.content[0].text : ''
+      const response = await anthropic.messages.create({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 2000,
+        messages: [{ role: 'user', content: prompt }],
+      })
+      reading = response.content[0].type === 'text' ? response.content[0].text : ''
+    }
 
     return NextResponse.json({
       reading,

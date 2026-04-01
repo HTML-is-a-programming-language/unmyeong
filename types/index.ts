@@ -57,4 +57,5 @@ export interface ReadingRequest {
     gender: string
   }
   category?: ReadingCategory
+  categories?: ReadingCategory[]
 }
