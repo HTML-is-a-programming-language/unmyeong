@@ -1,13 +1,11 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { GoogleGenAI } from '@google/genai'
 
 export const runtime = 'nodejs'
 
 const IMAGE_CREDIT_COST = 3
-
-// TODO: 나노바나나 API 키 환경변수 추가 후 아래 연동
-// const NANOBANA_API_KEY = process.env.NANOBANA_API_KEY!
-// const NANOBANA_API_URL = process.env.NANOBANA_API_URL!  // 나노바나나에서 제공하는 엔드포인트
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
 
 export async function POST(request: Request) {
   try {
@@ -41,41 +39,63 @@ export async function POST(request: Request) {
       )
     }
 
-    // 4. 크레딧 차감
+    // 4. File → base64 변환
+    const toBase64 = async (file: File) => {
+      const buffer = await file.arrayBuffer()
+      return Buffer.from(buffer).toString('base64')
+    }
+    const getMimeType = (file: File) =>
+      (file.type || 'image/jpeg') as 'image/jpeg' | 'image/png' | 'image/webp'
+
+    const [base64_1, base64_2] = await Promise.all([
+      toBase64(face1),
+      toBase64(face2),
+    ])
+
+    // 5. 크레딧 차감
     await supabase
       .from('profiles')
       .update({ credits: profile.credits - IMAGE_CREDIT_COST })
       .eq('id', user.id)
 
-    // ── 나노바나나 API 연동 (API 정보 받은 후 여기에 구현) ──────────────
-    //
-    // 예시 구조 (실제 API 문서에 맞게 수정 필요):
-    //
-    // const body = new FormData()
-    // body.append('image1', face1)
-    // body.append('image2', face2)
-    // body.append('prompt', 'a cute baby combining facial features of both parents')
-    //
-    // const response = await fetch(NANOBANA_API_URL, {
-    //   method: 'POST',
-    //   headers: { 'Authorization': `Bearer ${NANOBANA_API_KEY}` },
-    //   body,
-    // })
-    // const result = await response.json()
-    // const imageUrl = result.imageUrl ?? result.url ?? result.data?.url
-    //
-    // ───────────────────────────────────────────────────────────────
+    // 6. Gemini 이미지 생성
+    const response = await ai.models.generateContent({
+      model: 'gemini-3.1-flash-image-preview',
+      contents: [
+        {
+          role: 'user',
+          parts: [
+            {
+              text: 'These are photos of two parents. Generate a realistic and adorable baby photo that combines the facial features of both people. The baby should look like a natural blend of both parents.',
+            },
+            { inlineData: { mimeType: getMimeType(face1), data: base64_1 } },
+            { inlineData: { mimeType: getMimeType(face2), data: base64_2 } },
+          ],
+        },
+      ],
+      config: {
+        responseModalities: ['IMAGE'],
+      },
+    })
 
-    // 나노바나나 미연동 상태 — 크레딧 복구 후 안내 메시지
-    await supabase
-      .from('profiles')
-      .update({ credits: profile.credits })
-      .eq('id', user.id)
+    // 7. 응답에서 이미지 추출
+    const parts = response.candidates?.[0]?.content?.parts ?? []
+    const imagePart = parts.find((p: any) => p.inlineData)
 
-    return NextResponse.json(
-      { error: '2세 이미지 기능은 곧 오픈됩니다. 크레딧은 차감되지 않았어요.' },
-      { status: 503 }
-    )
+    if (!imagePart?.inlineData) {
+      // 이미지 생성 실패 시 크레딧 복구
+      await supabase
+        .from('profiles')
+        .update({ credits: profile.credits })
+        .eq('id', user.id)
+      return NextResponse.json({ error: '이미지 생성에 실패했어요.' }, { status: 502 })
+    }
+
+    // 8. base64 → data URL로 반환
+    const { mimeType, data } = imagePart.inlineData
+    const imageUrl = `data:${mimeType};base64,${data}`
+
+    return NextResponse.json({ imageUrl })
 
   } catch (error) {
     console.error('Baby image generation error:', error)
