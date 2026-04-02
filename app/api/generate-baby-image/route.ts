@@ -60,7 +60,7 @@ export async function POST(request: Request) {
 
     // 6. Gemini 이미지 생성
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash-preview-image-generation',
+      model: 'gemini-2.0-flash-exp',
       contents: [
         {
           role: 'user',

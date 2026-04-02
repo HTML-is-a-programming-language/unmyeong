@@ -159,17 +159,15 @@ export async function POST(request: Request) {
     // 4. Gemini 이미지 생성
     const prompt = buildImagePrompt(sajuResult, mode, gender ?? 'female', category)
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash-preview-image-generation',
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      config: { responseModalities: ['IMAGE', 'TEXT'] },
+    const response = await ai.models.generateImages({
+      model: 'imagen-3.0-generate-002',
+      prompt,
+      config: { numberOfImages: 1, outputMimeType: 'image/jpeg' },
     })
 
-    const parts = response.candidates?.[0]?.content?.parts ?? []
-    const imagePart = parts.find((p: any) => p.inlineData)
-
-    if (!imagePart?.inlineData) {
-      console.error('No image in Gemini response:', JSON.stringify(response.candidates?.[0]))
+    const imageBytes = response.generatedImages?.[0]?.image?.imageBytes
+    if (!imageBytes) {
+      console.error('No image in Imagen response:', JSON.stringify(response))
       // 크레딧 복구
       await supabase
         .from('profiles')
@@ -178,8 +176,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: '이미지 생성에 실패했어요.' }, { status: 500 })
     }
 
-    const { mimeType, data } = imagePart.inlineData
-    const imageUrl = `data:${mimeType};base64,${data}`
+    const imageUrl = `data:image/jpeg;base64,${imageBytes}`
 
     return NextResponse.json({
       imageUrl,
