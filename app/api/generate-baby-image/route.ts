@@ -60,7 +60,7 @@ export async function POST(request: Request) {
 
     // 6. Gemini 이미지 생성
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash-exp',
+      model: 'gemini-2.0-flash-preview-image-generation',
       contents: [
         {
           role: 'user',
@@ -101,7 +101,8 @@ export async function POST(request: Request) {
     })
 
   } catch (error) {
-    console.error('Baby image generation error:', error)
-    return NextResponse.json({ error: '이미지 생성 중 오류가 발생했어요.' }, { status: 500 })
+    const msg = error instanceof Error ? error.message : String(error)
+    console.error('Baby image generation error:', msg)
+    return NextResponse.json({ error: `이미지 생성 중 오류: ${msg}` }, { status: 500 })
   }
 }

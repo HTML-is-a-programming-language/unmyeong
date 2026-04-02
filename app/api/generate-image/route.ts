@@ -160,8 +160,8 @@ export async function POST(request: Request) {
     const prompt = buildImagePrompt(sajuResult, mode, gender ?? 'female', category)
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash-exp',
-      contents: prompt,
+      model: 'gemini-2.0-flash-preview-image-generation',
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
       config: { responseModalities: ['IMAGE', 'TEXT'] },
     })
 
@@ -169,6 +169,7 @@ export async function POST(request: Request) {
     const imagePart = parts.find((p: any) => p.inlineData)
 
     if (!imagePart?.inlineData) {
+      console.error('No image in Gemini response:', JSON.stringify(response.candidates?.[0]))
       // 크레딧 복구
       await supabase
         .from('profiles')
@@ -186,7 +187,8 @@ export async function POST(request: Request) {
     })
 
   } catch (error: unknown) {
-    console.error('Image generation error:', error)
-    return NextResponse.json({ error: '이미지 생성 중 오류가 발생했어요.' }, { status: 500 })
+    const msg = error instanceof Error ? error.message : String(error)
+    console.error('Image generation error:', msg)
+    return NextResponse.json({ error: `이미지 생성 중 오류: ${msg}` }, { status: 500 })
   }
 }
