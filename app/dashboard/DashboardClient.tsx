@@ -522,29 +522,31 @@ export default function DashboardClient({ user, initialCredits }: Props) {
                 {t(lang,'readingType')}
                 <span style={{ marginLeft:'0.5rem', fontSize:'0.72rem', color:'var(--muted)', fontWeight:400 }}>
                   {lang === 'Korean'
-                    ? `최대 3개 선택 가능 · 선택한 항목 수만큼 크레딧 소비 (현재 ${readingCats.length}개 선택 = ${Math.max(1, readingCats.length)} credit${readingCats.length > 1 ? 's' : ''})`
-                    : `Up to 3 · ${Math.max(1, readingCats.length)} credit${readingCats.length > 1 ? 's' : ''} (${readingCats.length} selected)`}
+                    ? `최대 10개 선택 가능 · 선택한 항목 수만큼 크레딧 소비 (현재 ${readingCats.length}개 선택 = ${Math.max(1, readingCats.length)} credit${readingCats.length > 1 ? 's' : ''})`
+                    : `Up to 10 · ${Math.max(1, readingCats.length)} credit${readingCats.length > 1 ? 's' : ''} (${readingCats.length} selected)`}
                 </span>
               </div>
               <div className={styles.catGrid}>
                 {READING_CATEGORY_IDS.map(id => {
                   const selected = readingCats.includes(id as ReadingCategory)
-                  const maxed = !selected && readingCats.length >= 3
+                  const maxed = !selected && readingCats.length >= 10
                   return (
                     <button
                       key={id}
                       className={`${styles.catBtn} ${selected ? styles.catBtnActive : ''}`}
-                      style={maxed ? { opacity: 0.4, cursor: 'not-allowed' } : {}}
+                      style={{ position:'relative', ...(maxed ? { opacity: 0.4, cursor: 'not-allowed' } : {}) }}
                       disabled={maxed}
                       onClick={() => {
                         if (selected) {
                           setReadingCats(prev => prev.filter(c => c !== id))
-                        } else if (readingCats.length < 3) {
+                        } else if (readingCats.length < 10) {
                           setReadingCats(prev => [...prev, id as ReadingCategory])
                         }
                       }}
                     >
-                      {selected && <span style={{ marginRight:'0.3rem', fontSize:'0.7rem' }}>✦</span>}
+                      {selected && (
+                        <span style={{ position:'absolute', top:'0.3rem', right:'0.35rem', fontSize:'0.65rem', color:'var(--paper)', lineHeight:1 }}>✦</span>
+                      )}
                       <span className={styles.catKr}>{t(lang, id)}</span>
                       {lang === 'Korean' ? null : <span className={styles.catEn}>{t('Korean', id)}</span>}
                     </button>

@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server'
-import OpenAI from 'openai'
+import { GoogleGenAI } from '@google/genai'
 import { createClient } from '@/lib/supabase/server'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! })
+export const runtime = 'nodejs'
+
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
 
 const IMAGE_CREDIT_COST = 3
 
@@ -154,20 +156,19 @@ export async function POST(request: Request) {
       .update({ credits: profile.credits - IMAGE_CREDIT_COST })
       .eq('id', user.id)
 
-    // 4. DALL-E 3 이미지 생성
+    // 4. Gemini 이미지 생성
     const prompt = buildImagePrompt(sajuResult, mode, gender ?? 'female', category)
 
-    const response = await openai.images.generate({
-      model: 'dall-e-3',
-      prompt,
-      n: 1,
-      size: '1024x1024',
-      quality: 'standard',
-      style: 'vivid',
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.0-flash-exp',
+      contents: prompt,
+      config: { responseModalities: ['IMAGE', 'TEXT'] },
     })
 
-    const imageUrl = response.data?.[0]?.url
-    if (!imageUrl) {
+    const parts = response.candidates?.[0]?.content?.parts ?? []
+    const imagePart = parts.find((p: any) => p.inlineData)
+
+    if (!imagePart?.inlineData) {
       // 크레딧 복구
       await supabase
         .from('profiles')
@@ -175,6 +176,9 @@ export async function POST(request: Request) {
         .eq('id', user.id)
       return NextResponse.json({ error: '이미지 생성에 실패했어요.' }, { status: 500 })
     }
+
+    const { mimeType, data } = imagePart.inlineData
+    const imageUrl = `data:${mimeType};base64,${data}`
 
     return NextResponse.json({
       imageUrl,

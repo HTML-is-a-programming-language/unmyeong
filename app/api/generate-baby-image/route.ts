@@ -74,7 +74,7 @@ export async function POST(request: Request) {
         },
       ],
       config: {
-        responseModalities: ['IMAGE'],
+        responseModalities: ['IMAGE', 'TEXT'],
       },
     })
 
@@ -95,7 +95,10 @@ export async function POST(request: Request) {
     const { mimeType, data } = imagePart.inlineData
     const imageUrl = `data:${mimeType};base64,${data}`
 
-    return NextResponse.json({ imageUrl })
+    return NextResponse.json({
+      imageUrl,
+      remainingCredits: profile.credits - IMAGE_CREDIT_COST,
+    })
 
   } catch (error) {
     console.error('Baby image generation error:', error)
