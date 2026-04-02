@@ -160,7 +160,7 @@ export async function POST(request: Request) {
     const prompt = buildImagePrompt(sajuResult, mode, gender ?? 'female', category)
 
     const response = await ai.models.generateContent({
-      model: 'gemini-3.1-flash-image-preview',
+      model: 'gemini-2.5-flash-image',
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
       config: { responseModalities: ['IMAGE', 'TEXT'] },
     })
