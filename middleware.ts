@@ -27,11 +27,6 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  // 로그인 안 된 유저가 대시보드 접근 시 로그인 페이지로
-  if (!user && request.nextUrl.pathname.startsWith('/dashboard')) {
-    return NextResponse.redirect(new URL('/login', request.url))
-  }
-
   // 이미 로그인된 유저가 로그인 페이지 접근 시 대시보드로
   if (user && request.nextUrl.pathname === '/login') {
     return NextResponse.redirect(new URL('/dashboard', request.url))
@@ -41,5 +36,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/login'],
+  matcher: ['/login'],
 }

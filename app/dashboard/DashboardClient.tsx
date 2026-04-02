@@ -701,13 +701,18 @@ export default function DashboardClient({ user, initialCredits }: Props) {
                       {lang === 'Korean' ? '내 사진' : 'My Photo'}
                     </label>
                     <label style={{
-                      display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+                      display:'block', position:'relative', paddingBottom:'100%',
                       border:'1px dashed var(--border)', borderRadius:'8px', cursor:'pointer',
-                      height:'120px', overflow:'hidden', background:'var(--paper)',
+                      overflow:'hidden', background:'var(--paper)',
                     }}>
                       {face1Preview
-                        ? <img src={face1Preview} alt="face 1" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
-                        : <span style={{ color:'var(--muted)', fontSize:'0.8rem', textAlign:'center', padding:'0.5rem' }}>
+                        ? <img src={face1Preview} alt="face 1" style={{
+                            position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'contain',
+                          }} />
+                        : <span style={{
+                            position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center',
+                            color:'var(--muted)', fontSize:'0.8rem', textAlign:'center', padding:'0.5rem',
+                          }}>
                             {lang === 'Korean' ? '클릭하여 업로드' : 'Click to upload'}
                           </span>}
                       <input type="file" accept="image/*" style={{ display:'none' }}
@@ -720,13 +725,18 @@ export default function DashboardClient({ user, initialCredits }: Props) {
                       {lang === 'Korean' ? (mode === 'compatibility' ? '상대방 사진' : '셀럽 사진') : (mode === 'compatibility' ? 'Partner Photo' : 'Celeb Photo')}
                     </label>
                     <label style={{
-                      display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+                      display:'block', position:'relative', paddingBottom:'100%',
                       border:'1px dashed var(--border)', borderRadius:'8px', cursor:'pointer',
-                      height:'120px', overflow:'hidden', background:'var(--paper)',
+                      overflow:'hidden', background:'var(--paper)',
                     }}>
                       {face2Preview
-                        ? <img src={face2Preview} alt="face 2" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
-                        : <span style={{ color:'var(--muted)', fontSize:'0.8rem', textAlign:'center', padding:'0.5rem' }}>
+                        ? <img src={face2Preview} alt="face 2" style={{
+                            position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'contain',
+                          }} />
+                        : <span style={{
+                            position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center',
+                            color:'var(--muted)', fontSize:'0.8rem', textAlign:'center', padding:'0.5rem',
+                          }}>
                             {lang === 'Korean' ? '클릭하여 업로드' : 'Click to upload'}
                           </span>}
                       <input type="file" accept="image/*" style={{ display:'none' }}
