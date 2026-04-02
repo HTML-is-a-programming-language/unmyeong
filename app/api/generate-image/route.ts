@@ -156,11 +156,11 @@ export async function POST(request: Request) {
       .update({ credits: profile.credits - IMAGE_CREDIT_COST })
       .eq('id', user.id)
 
-    // 4. Gemini 이미지 생성
+    // 4. DALL-E 3 이미지 생성
     const prompt = buildImagePrompt(sajuResult, mode, gender ?? 'female', category)
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash-exp',
+      model: 'gemini-3.1-flash-image-preview',
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
       config: { responseModalities: ['IMAGE', 'TEXT'] },
     })
@@ -169,7 +169,6 @@ export async function POST(request: Request) {
     const imagePart = parts.find((p: any) => p.inlineData)
 
     if (!imagePart?.inlineData) {
-      console.error('No image in Gemini response:', JSON.stringify(response.candidates?.[0]))
       // 크레딧 복구
       await supabase
         .from('profiles')
