@@ -833,6 +833,37 @@ export default function DashboardClient({ user, initialCredits }: Props) {
         )}
       </div>
 
+      {/* Footer */}
+      <footer style={{
+        borderTop: '1px solid var(--border)',
+        marginTop: '3rem',
+        padding: '1.5rem 1rem',
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        gap: '0.4rem 1.2rem',
+        fontSize: '0.75rem',
+        color: 'var(--muted)',
+      }}>
+        {[
+          { href: '/pricing',  ko: '가격',           en: 'Pricing' },
+          { href: '/terms',    ko: '서비스 이용약관', en: 'Terms of Service' },
+          { href: '/privacy',  ko: '개인정보처리방침',en: 'Privacy Policy' },
+          { href: '/refund',   ko: '환불규정',        en: 'Refund Policy' },
+        ].map(link => (
+          <a
+            key={link.href}
+            href={link.href}
+            style={{ color: 'var(--muted)', textDecoration: 'none' }}
+            onMouseOver={e => (e.currentTarget.style.color = 'var(--gold)')}
+            onMouseOut={e => (e.currentTarget.style.color = 'var(--muted)')}
+          >
+            {lang === 'Korean' ? link.ko : link.en}
+          </a>
+        ))}
+        <span>· © 2025 Unmyeong</span>
+      </footer>
+
       {/* Toast */}
       {toast && <div className={styles.toast}>{toast}</div>}
 
