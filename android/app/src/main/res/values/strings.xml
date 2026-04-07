@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">운명 Unmyeong</string>
+    <string name="title_activity_main">운명 Unmyeong</string>
+    <string name="package_name">com.unmyeong.app</string>
+    <string name="custom_url_scheme">com.unmyeong.app</string>
+</resources>

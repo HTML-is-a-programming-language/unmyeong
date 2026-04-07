@@ -8,6 +8,9 @@ export const CREDIT_PACKAGES = [
     label: '5 Credits',
     note: 'Try it out',
     priceEnvKey: 'PADDLE_PRICE_5_CREDITS',
+    // RevenueCat 인앱결제용 식별자
+    rcIdentifier: 'credits_5',          // RevenueCat Offering의 Package identifier
+    rcEntitlement: 'credits_5_access',  // RevenueCat Entitlement identifier
   },
   {
     id: 'credits_20',
@@ -16,6 +19,8 @@ export const CREDIT_PACKAGES = [
     label: '20 Credits',
     note: 'Best value ✦',
     priceEnvKey: 'PADDLE_PRICE_20_CREDITS',
+    rcIdentifier: 'credits_20',
+    rcEntitlement: 'credits_20_access',
   },
   {
     id: 'credits_50',
@@ -24,6 +29,8 @@ export const CREDIT_PACKAGES = [
     label: '50 Credits',
     note: 'Power user',
     priceEnvKey: 'PADDLE_PRICE_50_CREDITS',
+    rcIdentifier: 'credits_50',
+    rcEntitlement: 'credits_50_access',
   },
 ] as const
 

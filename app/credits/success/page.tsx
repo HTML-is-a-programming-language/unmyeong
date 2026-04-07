@@ -1,18 +1,36 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/client'
 import styles from './success.module.css'
 
-export default async function SuccessPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+export default function SuccessPage() {
+  const router = useRouter()
+  const [credits, setCredits] = useState<number | null>(null)
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('credits')
-    .eq('id', user.id)
-    .single()
+  useEffect(() => {
+    const supabase = createClient()
+
+    async function load() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        router.replace('/login')
+        return
+      }
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('credits')
+        .eq('id', user.id)
+        .single()
+
+      setCredits(profile?.credits ?? 0)
+    }
+
+    load()
+  }, [router])
 
   return (
     <div className={styles.container}>
@@ -23,7 +41,9 @@ export default async function SuccessPage() {
 
         <div className={styles.creditBox}>
           <div className={styles.creditLabel}>현재 잔여 크레딧</div>
-          <div className={styles.creditNum}>{profile?.credits ?? 0}</div>
+          <div className={styles.creditNum}>
+            {credits === null ? '...' : credits}
+          </div>
           <div className={styles.creditNote}>credits</div>
         </div>
 

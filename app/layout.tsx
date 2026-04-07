@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import PaddleProvider from '@/components/PaddleProvider'
+import ConditionalPaddleProvider from '@/components/ConditionalPaddleProvider'
 
 export const metadata: Metadata = {
   title: '운명 · Unmyeong — Korean Fate Reading',
@@ -22,7 +22,7 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <PaddleProvider />
+        <ConditionalPaddleProvider />
         {children}
       </body>
     </html>
