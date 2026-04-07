@@ -1,0 +1,18 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/checkout/route": "app/api/checkout/route.js",
+  "/api/credits/grant/route": "app/api/credits/grant/route.js",
+  "/api/saju/route": "app/api/saju/route.js",
+  "/auth/callback/page": "app/auth/callback/page.js",
+  "/credits/success/page": "app/credits/success/page.js",
+  "/login/page": "app/login/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/page": "app/page.js",
+  "/pricing/page": "app/pricing/page.js",
+  "/refund/page": "app/refund/page.js",
+  "/terms/page": "app/terms/page.js",
+  "/privacy/page": "app/privacy/page.js",
+  "/api/paddle/webhook/route": "app/api/paddle/webhook/route.js",
+  "/api/generate-baby-image/route": "app/api/generate-baby-image/route.js",
+  "/api/generate-image/route": "app/api/generate-image/route.js"
+}

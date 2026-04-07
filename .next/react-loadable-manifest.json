@@ -1,0 +1,36 @@
+{
+  "components\\BuyCreditsModal.tsx -> @/lib/supabase/client": {
+    "id": 6474,
+    "files": []
+  },
+  "components\\BuyCreditsModal.tsx -> @paddle/paddle-js": {
+    "id": 8553,
+    "files": [
+      "static/chunks/553.40d237bc9e524b27.js"
+    ]
+  },
+  "components\\BuyCreditsModal.tsx -> @revenuecat/purchases-capacitor": {
+    "id": 1938,
+    "files": [
+      "static/chunks/938.013b574dd7ae7f3f.js"
+    ]
+  },
+  "components\\ConditionalPaddleProvider.tsx -> @paddle/paddle-js": {
+    "id": 8553,
+    "files": [
+      "static/chunks/553.40d237bc9e524b27.js"
+    ]
+  },
+  "components\\ShareCard.tsx -> html-to-image": {
+    "id": 7293,
+    "files": [
+      "static/chunks/293.aa6106a24b3cc6de.js"
+    ]
+  },
+  "node_modules\\@revenuecat\\purchases-capacitor\\dist\\esm\\index.js -> ./web": {
+    "id": 7555,
+    "files": [
+      "static/chunks/555.4ffcd30415aa6ce9.js"
+    ]
+  }
+}
