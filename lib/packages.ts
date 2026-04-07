@@ -22,14 +22,14 @@ export const CREDIT_PACKAGES = [
     rcEntitlement: 'credits_20_access',
   },
   {
-    id: 'credits_50',
+    id: 'credits_60',
     credits: 60,
     price: 17.99,
     label: '60 Credits',
     note: 'Power user',
-    priceEnvKey: 'PADDLE_PRICE_50_CREDITS',
-    rcIdentifier: 'credits_50',
-    rcEntitlement: 'credits_50_access',
+    priceEnvKey: 'PADDLE_PRICE_60_CREDITS',
+    rcIdentifier: 'credits_60',
+    rcEntitlement: 'credits_60_access',
   },
 ] as const
 
