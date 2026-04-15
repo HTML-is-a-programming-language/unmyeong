@@ -173,6 +173,13 @@
 }
 
 @media (max-width: 420px) {
+  .card { padding: 1.5rem 1.2rem; }
   .actions { flex-direction: column; }
   .btnSave, .btnTwitter, .btnShare { flex: none; width: 100%; }
+}
+
+@media (max-width: 360px) {
+  .card { padding: 1.2rem 1rem; }
+  .cardLogo { font-size: 1.6rem; }
+  .cardContent { font-size: 0.78rem; }
 }

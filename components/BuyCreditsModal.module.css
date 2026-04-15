@@ -74,3 +74,15 @@
   transition: all 0.2s;
 }
 .btnClose:hover { border-color: var(--ink); color: var(--ink); }
+
+@media (max-width: 480px) {
+  .modal { padding: 1.5rem 1.2rem; border-radius: 12px; }
+}
+
+@media (max-width: 360px) {
+  .modal { padding: 1.2rem 1rem; }
+  .title { font-size: 1rem; }
+  .pkg { padding: 0.75rem 0.8rem; }
+  .pkgName { font-size: 0.84rem; }
+  .pkgPrice { font-size: 1rem; }
+}

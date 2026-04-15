@@ -128,3 +128,19 @@
   color: var(--gold);
   font-size: 0.7rem;
 }
+
+@media (max-width: 480px) {
+  .container { padding: 1.2rem; }
+  .card { padding: 2rem 1.5rem; }
+  .logo { font-size: 2.5rem; }
+}
+
+@media (max-width: 360px) {
+  .container { padding: 1rem 0.75rem; }
+  .card { padding: 1.6rem 1.2rem; border-radius: 12px; }
+  .logo { font-size: 2.2rem; }
+  .logoEn { font-size: 0.7rem; letter-spacing: 0.35em; }
+  .tagline { font-size: 0.78rem; }
+  .btnGoogle, .btnApple { padding: 0.7rem 0.9rem; font-size: 0.84rem; }
+  .terms { font-size: 0.68rem; }
+}

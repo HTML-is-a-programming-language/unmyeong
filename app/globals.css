@@ -12,12 +12,14 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
+html { overflow-x: hidden; }
 
 body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-sans);
   min-height: 100vh;
+  overflow-x: hidden;
   background-image:
     radial-gradient(ellipse at 20% 20%, rgba(201,148,58,0.08) 0%, transparent 60%),
     radial-gradient(ellipse at 80% 80%, rgba(139,26,26,0.06) 0%, transparent 60%);

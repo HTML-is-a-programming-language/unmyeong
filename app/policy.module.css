@@ -323,3 +323,20 @@
 .footer a:hover {
   color: var(--gold);
 }
+
+@media (max-width: 480px) {
+  .page { padding: 1.5rem 1rem 3rem; }
+  .pageTitle { font-size: 1.6rem; }
+  .packages { grid-template-columns: 1fr; }
+  .ctaSection { padding: 1.5rem 1rem; }
+  .ctaTitle { font-size: 1.1rem; }
+}
+
+@media (max-width: 360px) {
+  .page { padding: 1.2rem 0.75rem 2.5rem; }
+  .pageTitle { font-size: 1.4rem; }
+  .header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .langBar { gap: 0.25rem; }
+  .langBtn { padding: 0.2rem 0.5rem; font-size: 0.65rem; }
+  .footer { gap: 1rem; }
+}

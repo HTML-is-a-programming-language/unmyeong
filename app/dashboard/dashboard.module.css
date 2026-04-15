@@ -3,10 +3,10 @@
 /* Header */
 .header { border-bottom: 1px solid var(--border); background: rgba(245,239,230,0.95); position: sticky; top: 0; z-index: 10; backdrop-filter: blur(8px); }
 .headerInner { max-width: 800px; margin: 0 auto; padding: 0.8rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
-.logoGroup { display: flex; align-items: baseline; gap: 0.6rem; }
-.logo { font-family: var(--font-serif); font-size: 1.6rem; font-weight: 300; color: var(--gold); letter-spacing: 0.2em; }
-.logoSub { font-family: var(--font-display); font-size: 0.65rem; color: var(--muted); letter-spacing: 0.4em; }
-.headerRight { display: flex; align-items: center; gap: 0.75rem; }
+.logoGroup { display: flex; align-items: baseline; gap: 0.6rem; min-width: 0; flex-shrink: 0; }
+.logo { font-family: var(--font-serif); font-size: 1.6rem; font-weight: 300; color: var(--gold); letter-spacing: 0.2em; white-space: nowrap; }
+.logoSub { font-family: var(--font-display); font-size: 0.65rem; color: var(--muted); letter-spacing: 0.4em; white-space: nowrap; }
+.headerRight { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
 .creditsChip { display: flex; align-items: baseline; gap: 0.25rem; background: rgba(201,148,58,0.1); border: 1px solid var(--border); border-radius: 20px; padding: 0.25rem 0.75rem; }
 .creditNum { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--gold); }
 .creditLabel { font-size: 0.7rem; color: var(--muted); }
@@ -98,9 +98,55 @@
 .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 0.7rem 1.5rem; border-radius: 20px; font-size: 0.84rem; z-index: 999; animation: slideUp 0.3s ease; }
 @keyframes slideUp { from { transform: translateX(-50%) translateY(20px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
 
+/* ── 560px: 기본 모바일 ───────────────────────── */
 @media (max-width: 560px) {
   .grid3 { grid-template-columns: 1fr 1fr; }
   .grid2 { grid-template-columns: 1fr; }
   .catGrid { grid-template-columns: repeat(3, 1fr); }
   .idolGrid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ── 480px: 소형 스마트폰 ──────────────────────── */
+@media (max-width: 480px) {
+  .headerInner { padding: 0.7rem 1rem; }
+  .logoSub { display: none; }
+  .logo { font-size: 1.4rem; }
+  .creditsChip { padding: 0.2rem 0.55rem; gap: 0.2rem; }
+  .creditNum { font-size: 0.9rem; }
+  .btnBuy { padding: 0.28rem 0.7rem; font-size: 0.72rem; }
+  .btnSignOut { padding: 0.28rem 0.6rem; font-size: 0.72rem; }
+  .container { padding: 1.5rem 1rem; }
+  .formCard { padding: 1.2rem 1rem; }
+  .resultHeader { padding: 1rem 1.2rem; }
+  .resultBody { padding: 1.2rem 1rem; font-size: 0.87rem; }
+  .resultActions { padding: 0.75rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
+  .idolGrid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── 360px: 극소형 (Galaxy A, 구형 iPhone SE 등) ── */
+@media (max-width: 360px) {
+  .headerInner { padding: 0.6rem 0.75rem; }
+  .headerRight { gap: 0.4rem; }
+  .logo { font-size: 1.2rem; }
+  .creditsChip { padding: 0.18rem 0.45rem; }
+  .creditNum { font-size: 0.85rem; }
+  .creditLabel { display: none; }
+  .btnBuy { padding: 0.25rem 0.5rem; font-size: 0.68rem; }
+  .btnSignOut { padding: 0.25rem 0.45rem; font-size: 0.68rem; }
+  .container { padding: 1.2rem 0.75rem; }
+  .formCard { padding: 1rem 0.75rem; }
+  .modeKr { font-size: 0.75rem; }
+  .modeCost { font-size: 0.56rem; }
+  .grid3 { grid-template-columns: 1fr; }
+  .catGrid { grid-template-columns: repeat(2, 1fr); }
+  .sectionTitle { font-size: 0.76rem; letter-spacing: 0.08em; }
+  .resultHeader { padding: 0.85rem 0.75rem; }
+  .resultTitle { font-size: 0.88rem; letter-spacing: 0.08em; }
+  .resultBody { padding: 1rem 0.75rem; font-size: 0.84rem; }
+  .resultActions { padding: 0.6rem 0.75rem; }
+  .btnCopy, .btnTwitter { padding: 0.38rem 0.65rem; font-size: 0.71rem; }
+  .loadingChars { font-size: 1.5rem; letter-spacing: 0.3em; }
+  .toast { padding: 0.55rem 1rem; font-size: 0.76rem; width: calc(100vw - 2rem); }
+  .idolGrid { grid-template-columns: repeat(2, 1fr); }
+  .drillBtn { padding: 0.22rem 0.6rem; font-size: 0.72rem; }
 }
