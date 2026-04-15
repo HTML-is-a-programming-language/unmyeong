@@ -419,6 +419,9 @@ export default function DashboardClient({ user, initialCredits }: Props) {
           mode,
           language: lang,
           gender: gender1,
+          gender2: mode === 'compatibility' ? gender2
+                 : mode === 'idol' ? (selectedIdol?.gender ?? customGender)
+                 : undefined,
           category: mode === 'personal' ? readingCats[0] : undefined,
         }),
       })

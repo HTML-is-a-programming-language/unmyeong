@@ -66,7 +66,27 @@ export async function POST(request: Request) {
           role: 'user',
           parts: [
             {
-              text: 'These are photos of two parents. Generate a realistic and adorable baby photo that combines the facial features of both people. The baby should look like a natural blend of both parents.',
+              text: `You are given two parent face photos. Generate a single realistic baby photo following these strict rules:
+
+STRICT REQUIREMENTS:
+- The baby must be facing directly forward (front-facing, straight-on view)
+- Eyes must be fully open, looking at the camera
+- Realistic photo style — NOT illustration, NOT cartoon, NOT painting
+- The baby's face should be a natural genetic blend of both parents' facial features (eye shape, nose, lips, face shape, skin tone)
+- Age: newborn to 6 months old
+- The baby should have a neutral or slightly smiling expression
+- Clear, sharp focus on the baby's face
+- Simple clean background (white, cream, or soft neutral)
+- Natural lighting, soft and even
+- Photo should look like a real professional baby portrait
+
+DO NOT:
+- Do not make the baby's eyes closed or half-closed
+- Do not make a cartoon or illustration
+- Do not add decorative elements or fantasy elements
+- Do not make the baby look away from camera
+
+The two parent photos are attached below.`,
             },
             { inlineData: { mimeType: getMimeType(face1), data: base64_1 } },
             { inlineData: { mimeType: getMimeType(face2), data: base64_2 } },

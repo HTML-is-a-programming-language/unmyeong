@@ -52,61 +52,40 @@ function extractColorPalette(text: string): string {
   return 'soft pink, dreamy lavender, warm gold, pearl white — romantic and ethereal'
 }
 
-function buildImagePrompt(sajuResult: string, mode: string, gender: string, category?: string): string {
-  // Gender-aware figure description
-  const genderMap: Record<string, string> = {
+function personDesc(gender: string): string {
+  const map: Record<string, string> = {
     male:      'a handsome young Asian man',
     female:    'a beautiful young Asian woman',
     nonbinary: 'a beautiful young Asian person',
   }
-  const personDesc = genderMap[gender] ?? 'a beautiful young Asian person'
+  return map[gender] ?? 'a beautiful young Asian person'
+}
+
+function buildImagePrompt(sajuResult: string, mode: string, gender: string, category?: string, gender2?: string): string {
+  const person1 = personDesc(gender)
+  const person2 = gender2 ? personDesc(gender2) : null
 
   const themes = extractThemes(sajuResult)
   const palette = extractColorPalette(sajuResult)
 
-  // ── Baby / 2세 mode ──────────────────────────────────────────────
-  if (mode === 'baby') {
-    return `Digital illustration artwork: A magical, heartwarming image of a beautiful baby — the destined child of two souls connected by fate and the stars.
+  // ── 개인 사주 ────────────────────────────────────────────────────
+  if (mode === 'personal') {
+    const categoryScenes: Record<string, string> = {
+      personality: `${person1} whose inner world is being revealed — their true self expressed through light, nature, and atmosphere`,
+      career:      `${person1} at the peak of their potential — confidence, ambition, and purpose radiating outward`,
+      wealth:      `${person1} surrounded by an aura of abundance — golden light, prosperity, and flow`,
+      love:        `${person1} in the midst of a deeply felt emotion — love, longing, and beauty`,
+      marriage:    `${person1} in a moment of deep connection and partnership — warmth and commitment`,
+      health:      `${person1} glowing with vitality and natural energy — balanced, alive, radiant`,
+      family:      `${person1} in a warm, safe, connected atmosphere — roots, belonging, and love`,
+      children:    `${person1} with a gentle, nurturing light — the energy of caring and legacy`,
+      mentor:      `${person1} with a guiding light around them — the aura of someone who helps others`,
+      destiny:     `${person1} standing at the crossroads of a grand, cinematic life journey — destiny unfolding`,
+    }
+    const scene = (category && categoryScenes[category])
+      ?? `${person1} in a dreamy, ethereal atmosphere — ${themes}`
 
-Scene: A precious infant wrapped in soft light, surrounded by floating petals, tiny stars, and a sense of cosmic wonder. Tiny fingers reaching toward a glowing orb of fate. Pure innocence meeting ancient destiny.
-
-Art style:
-- Soft, painterly digital illustration — like a premium Korean children's book or a dreamy baby shower illustration
-- Warm, tender, magical atmosphere — like the opening scene of a fairy tale
-- Delicate details: tiny fingers and toes, soft baby skin glowing with light, flower petals, floating star fragments
-- Colors: soft cream, warm peach, pale gold, gentle pink and blue woven together harmoniously
-- Beautiful, innocent, heartwarming — the kind of image that makes everyone melt
-
-${palette.includes('rose') || palette.includes('pink') ? 'Color palette: soft peach, warm cream, pale rose gold, baby pink, gentle stardust gold' : 'Color palette: soft cream, warm peach, pale sky blue, golden light, gentle ivory'}
-
-Quality: ultra-detailed, beautiful, warm, heartwarming — pure joy and wonder
-No text, no letters, no watermarks in the image.`
-  }
-
-  // ── Category-aware scene ─────────────────────────────────────────
-  const categoryScenes: Record<string, string> = {
-    personality: `${personDesc} whose inner world is being revealed — their true self expressed through light, nature, and atmosphere`,
-    career:      `${personDesc} at the peak of their potential — confidence, ambition, and purpose radiating outward`,
-    wealth:      `${personDesc} surrounded by an aura of abundance — golden light, prosperity, and flow`,
-    love:        `${personDesc} in the midst of a deeply felt emotion — love, longing, and beauty`,
-    marriage:    `${personDesc} in a moment of deep connection and partnership — warmth and commitment`,
-    health:      `${personDesc} glowing with vitality and natural energy — balanced, alive, radiant`,
-    family:      `${personDesc} in a warm, safe, connected atmosphere — roots, belonging, and love`,
-    children:    `${personDesc} with a gentle, nurturing light — the energy of caring and legacy`,
-    mentor:      `${personDesc} with a guiding light around them — the aura of someone who helps others`,
-    destiny:     `${personDesc} standing at the crossroads of a grand, cinematic life journey — destiny unfolding`,
-  }
-
-  const modeScenes: Record<string, string> = {
-    compatibility: `two young Asian people drawn together by fate — their energies intertwining like ${themes}`,
-    idol:          `a cinematic, emotional moment of connection between two souls across different worlds — ${themes}`,
-  }
-
-  const scene = (category && categoryScenes[category])
-    ?? modeScenes[mode]
-    ?? `${personDesc} in a dreamy, ethereal atmosphere — ${themes}`
-
-  return `Digital illustration artwork: ${scene}.
+    return `Digital illustration artwork: ${scene}.
 
 Visual atmosphere and themes: ${themes}
 
@@ -115,13 +94,48 @@ Art style:
 - Dreamy, romantic atmosphere with warm and cool color harmony
 - Delicate details: petals floating, light particles, flowing hair, translucent fabric
 - Beautiful lighting: soft rim light, golden hour glow, or moonlight depending on the theme
-- Lush floral and nature elements woven throughout
 - Cinematic composition, like a still from a high-budget K-drama or music video
-- Aesthetic similar to: NewJeans album art, aespa concept art, IU music video visuals
 
 Color palette: ${palette}
 
-Quality: ultra-detailed, high resolution, beautiful — the kind of image someone saves to their phone immediately
+Quality: ultra-detailed, high resolution, beautiful.
+No text, no letters, no watermarks in the image.`
+  }
+
+  // ── 궁합 / 아이돌 궁합 — 두 사람 ───────────────────────────────
+  const p2 = person2 ?? 'a beautiful young Asian person'
+
+  // 사주 결과에서 두 사람의 관계 키워드 추출
+  const relationshipTone = (() => {
+    if (sajuResult.match(/장점|좋은|편안|케미|완벽|운명|강한|빛나|행복|harmonious|perfect|strong|destiny|powerful/i))
+      return 'deeply in love, drawn irresistibly toward each other, warmth and chemistry radiating between them'
+    if (sajuResult.match(/도전|단점|충돌|갈등|차이|어려움|challenging|conflict|difficult|friction/i))
+      return 'tension and magnetic pull between them — a complex, passionate connection full of depth'
+    return 'a fated connection, two souls sharing a quiet but profound moment together'
+  })()
+
+  const isIdol = mode === 'idol'
+  const sceneDesc = isIdol
+    ? `${person1} and ${p2} in a cinematic, emotional K-drama-style scene — ${relationshipTone}`
+    : `${person1} and ${p2} together in a beautiful, romantic scene — ${relationshipTone}`
+
+  return `Digital illustration artwork: ${sceneDesc}.
+
+Two characters clearly visible together in the scene. Their body language and the atmosphere reflect their relationship: ${relationshipTone}.
+
+Visual atmosphere: ${themes}
+
+Art style:
+- Soft, painterly digital illustration — cinematic, like a premium K-drama poster or K-pop album art
+- Two figures as the clear focus — their connection is the heart of the image
+- Dreamy lighting: golden hour, soft backlight, or moonlit glow depending on the mood
+- Delicate details: floating petals, light particles, flowing fabric, lush natural surroundings
+- The overall feeling should immediately communicate the nature of their relationship
+- Cinematic composition, beautiful and emotional — like a still from a high-budget music video
+
+Color palette: ${palette}
+
+Quality: ultra-detailed, high resolution, cinematic, emotionally resonant.
 No text, no letters, no watermarks in the image.`
 }
 
@@ -134,7 +148,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: '로그인이 필요해요.' }, { status: 401 })
     }
 
-    const { sajuResult, mode, language, gender, category } = await request.json()
+    const { sajuResult, mode, language, gender, gender2, category } = await request.json()
     if (!sajuResult) {
       return NextResponse.json({ error: '사주 결과가 없어요.' }, { status: 400 })
     }
@@ -157,7 +171,7 @@ export async function POST(request: Request) {
       .eq('id', user.id)
 
     // 4. DALL-E 3 이미지 생성
-    const prompt = buildImagePrompt(sajuResult, mode, gender ?? 'female', category)
+    const prompt = buildImagePrompt(sajuResult, mode, gender ?? 'female', category, gender2)
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-image',
