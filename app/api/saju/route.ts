@@ -247,6 +247,7 @@ CRITICAL FORMATTING RULES — THESE ARE ABSOLUTE:
 - Section titles are plain text on their own line — NO symbols before or after them
 - After each section title, write flowing paragraphs. NO bullet points. NO dashes. NO numbered lists.
 - The section title style: a short, poetic, evocative phrase that captures the essence (e.g. "불꽃처럼 살아있는 당신의 내면") followed by a blank line, then the paragraph content.
+- ABSOLUTELY NO Chinese characters or Hanja (한자) in the output. No 日柱, 年柱, 月柱, 甲, 乙, 戊午, 丁卯, 木, 火, 土, 金, 水, 財星, 官星, 印星 etc. Translate EVERYTHING into plain Korean words. Use "태어난 날의 기운" not "日柱", "나무 기운" not "木" or "木(나무)", "불 기운" not "火", "쇠 기운" not "金", "물 기운" not "水", "흙 기운" not "土".
 
 WRITING STYLE:
 1. Write ENTIRELY in ${lang}. Every single word must be in ${lang}.
@@ -284,43 +285,41 @@ CRITICAL FORMATTING RULES — ABSOLUTE:
 - NEVER use any markdown: no **, no *, no #, no ___, no ~~
 - Section titles are plain text on their own line — NO symbols before or after them
 - After each section title, write flowing paragraphs. NO bullet points. NO dashes. NO numbered lists.
-- Section title style: a short, poetic phrase that captures the section's essence, on its own line, followed by a blank line, then the paragraph content.
+- Section title style: a short, poetic Korean phrase on its own line, followed by a blank line, then the paragraph content.
+- ABSOLUTELY NO Chinese characters or Hanja in the output. No 日柱, 甲, 戊午, 木, 火, 土, 金, 水 etc. Use plain Korean words only.
 
 WRITING STYLE:
 1. Write ENTIRELY in ${lang}.
-2. NO jargon — translate everything into real life. Instead of "Wood feeds Fire elementally" say "one of you naturally energizes the other."
-3. Write like the world's most insightful friend — warm, direct, occasionally funny.
+2. NO jargon — translate everything into plain everyday language.
+3. Write like the world's most insightful friend — warm, direct, honest, occasionally funny.
 4. Make each section feel so specific the reader screenshots it.
-5. Each section 3–5 sentences. Flowing prose, not academic.
-6. BE HONEST about the compatibility. If the elements clash, say so. A real score with honest insight is worth more than a false 90/100.
+5. Each section 3–5 sentences of flowing prose. No lists, no bullet points.
+6. BE HONEST. If the elements clash, say so clearly. A real score with honest insight beats a false high score.
 
-FOLLOW THIS EXACT FORMAT (plain text titles, flowing paragraphs beneath each):
+FOLLOW THIS EXACT FORMAT — each section title is a short, evocative Korean phrase you create yourself, followed by flowing paragraphs:
 
 궁합 점수
-[점수/100] — 이 두 사람의 운명을 한 문장으로 극적으로 선언하세요. 왜 이 점수인지 짧게 설명하세요.
+[점수/100] — 이 두 사람의 관계를 한 문장으로 극적으로 선언하세요. 왜 이 점수인지 감각적으로 설명하세요.
 
-두 사람의 에너지
-각자의 사주 핵심 에너지를 생생한 자연 비유로 묘사하세요. 이 두 에너지가 만나면 어떤 모습인지.
+장점
+다음 4가지를 자연스럽게 녹여 하나의 흐르는 단락으로 써주세요: 성향상 잘 맞는 부분, 서로에게 편안함을 주는 부분, 연애할 때 자연스럽게 좋은 흐름이 나는 부분, 장기적으로 강점이 되는 부분.
 
-오행의 케미
-두 사람의 오행이 어떻게 상호작용하는지 자연 비유로 쉽게 설명하세요.
+단점
+다음 4가지를 자연스럽게 녹여 하나의 흐르는 단락으로 써주세요: 충돌이 반복될 수 있는 포인트, 감정 표현 방식의 차이, 연락·애정·생활 방식의 차이, 자존심·집착·회피 등 문제 패턴. 솔직하고 구체적으로.
 
-감정적 연결
-서로의 마음을 얼마나 깊이 이해하는지. 무엇이 서로를 진심으로 이해받는다고 느끼게 하는지.
+개선 포인트
+다음 4가지를 자연스럽게 녹여 하나의 흐르는 단락으로 써주세요: 서로 어떤 방식으로 말해야 덜 부딪히는지, 싸웠을 때 누가 먼저 어떤 태도를 취하면 좋은지, 관계 유지에 필요한 규칙, 상대가 원하는 사랑 표현 방식.
 
-이 관계의 빛나는 힘
-이 조합만의 강점. 둘이 함께라면 혼자서는 못 하는 무엇이 가능한지.
+장기 관계
+다음 4가지를 자연스럽게 녹여 하나의 흐르는 단락으로 써주세요: 결혼·동거 시 현실 궁합, 경제관념 차이, 가족관계나 책임감, 미래 방향성 일치 여부.
 
-피해갈 수 없는 도전
-반복되는 마찰 포인트. 솔직하고 구체적으로 — 이 섹션이 가장 중요합니다. 실용적인 조언 포함.
-
-전생의 인연
-두 사람이 전생에서 어떤 관계였는지, 무슨 일이 있었는지, 그 인연이 이번 생에 어떻게 이어지는지. 2~3문장으로 생생하고 영화적으로 묘사하세요.
+전생
+두 사람이 전생에서 어떤 관계로 시작했는지, 어떻게 살았는지, 어떻게 끝났는지를 3~4문장으로 영화처럼 생생하게 묘사하세요. 그 전생의 감정이 이번 생에 어떻게 이어지는지도 포함하세요.
 
 운명의 한 마디
 이 두 사람의 이야기를 담은 시적이고 영화적인 마지막 한 문장.
 
-Length: 550–650 words.`
+Length: 600–700 words.`
 }
 
 function buildIdolPrompt(req: ReadingRequest) {
@@ -354,6 +353,7 @@ CRITICAL FORMATTING RULES — ABSOLUTE:
 - Section titles are plain text on their own line — NO symbols before or after them
 - After each section title, write flowing paragraphs. NO bullet points. NO dashes. NO numbered lists.
 - Section title style: a short, emotionally evocative Korean phrase on its own line, followed by a blank line, then the paragraph content.
+- ABSOLUTELY NO Chinese characters or Hanja in the output. Use plain Korean words only.
 
 WRITING STYLE:
 1. Write ENTIRELY in ${lang}.
@@ -363,30 +363,30 @@ WRITING STYLE:
 5. Each section 3–5 sentences. Emotional, personal, specific. Flowing prose only.
 6. BE HONEST about the fate score — a real score with honest insight beats a false perfect score. Even hard pairings have their magic — find it.
 
-FOLLOW THIS EXACT FORMAT (plain text section titles, flowing paragraphs beneath each):
+FOLLOW THIS EXACT FORMAT — each section title is a short, evocative Korean phrase you create yourself, followed by flowing paragraphs:
 
 운명 점수
 [점수/100] — 이 운명을 한 문장으로 극적으로 선언하세요. 팬의 심장이 두근거리게 만드세요.
 
-두 사람의 세계
-팬과 ${celeb.name} 각자의 에너지를 자연과 영화적 비유로 생생하게 그려내세요. 이 두 에너지가 만나면 어떤 장면이 펼쳐지는지.
+장점
+다음 4가지를 자연스럽게 녹여 하나의 흐르는 단락으로 써주세요: 두 사람의 성향상 잘 맞는 부분, 서로에게 편안함을 주는 부분, 함께할 때 자연스럽게 좋은 흐름이 나는 부분, 장기적으로 강점이 되는 부분. ${celeb.name}과 함께하는 장면처럼 감성적으로.
 
-우주가 맺어준 케미
-두 사람의 사주 오행이 어떻게 맞닿는지 아름답고 쉬운 언어로 설명하세요. 불꽃이 바람을 만나는지, 바다가 해변을 만나는지.
+단점
+다음 4가지를 자연스럽게 녹여 하나의 흐르는 단락으로 써주세요: 충돌이 반복될 수 있는 포인트, 감정 표현 방식의 차이, 연락·애정·생활 방식의 차이, 자존심·집착·회피 등 문제 패턴. 솔직하게, 하지만 따뜻하게.
 
-${celeb.name}이(가) 당신에게 빠지는 이유
-팬의 사주에서 보이는 2~3가지 특별한 매력이 ${celeb.name}을(를) 어떻게 사로잡을지. 진짜처럼 느껴지게, 개인적으로.
+개선 포인트
+다음 4가지를 자연스럽게 녹여 하나의 흐르는 단락으로 써주세요: 서로 어떤 방식으로 말해야 덜 부딪히는지, 싸웠을 때 누가 먼저 어떤 태도를 취하면 좋은지, 관계 유지에 필요한 것, ${celeb.name}이 원하는 사랑 표현 방식.
 
-두 사람이 함께라면
-누가 이끌고 누가 감싸는지. 이 두 에너지 사이에서 사랑과 힘이 어떻게 흐르는지. 그 장면을 그려내세요.
+장기 관계
+다음 4가지를 자연스럽게 녹여 하나의 흐르는 단락으로 써주세요: 함께 살 때의 현실 궁합, 경제관념 차이, 가족관계나 책임감, 미래 방향성 일치 여부. 현실적이면서도 로맨틱하게.
 
-전생의 기억
-두 사람이 전생에서 어떤 관계였는지 — 연인이었는지, 스쳐간 인연이었는지, 서로를 지켜줬는지 — 그 구체적인 이야기를 2~3문장으로 영화처럼 묘사하세요. 전생에서 무슨 일이 있었는지, 그 감정이 이번 생에 어떻게 이어지는지 반드시 포함하세요.
+전생
+두 사람이 전생에서 어떤 관계로 시작했는지, 어떻게 살았는지, 어떻게 끝났는지를 3~4문장으로 영화처럼 생생하게 묘사하세요. 그 전생의 감정이 이번 생에 어떻게 이어지는지도 포함하세요. 팬이 읽고 눈물이 날 만큼 아름답고 구체적으로.
 
 우주가 당신에게 전하는 말
 마치 우주가 직접 팬에게 말을 건네는 것처럼 — 시적이고 아름답고 잊을 수 없는 마지막 메시지.
 
-Length: 550–700 words. Emotional, cinematic, unforgettable.`
+Length: 650–750 words. Emotional, cinematic, unforgettable.`
 }
 
 // ── API 핸들러 ────────────────────────────────────────────────────
