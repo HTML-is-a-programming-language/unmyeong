@@ -60,74 +60,164 @@ function elementDescription(element: string, language: string): string {
 // ── 카테고리별 출력 포맷 ───────────────────────────────────────────
 const FORMAT_GUIDES: Record<string, string> = {
   personality: `
-✦ 나의 사주 핵심 — 일주(日柱)의 오행이 무엇인지 자연에 빗댄 이미지로 설명 (예: "당신의 일주는 큰 강물처럼..."). 사주를 처음 접하는 사람도 바로 이해할 수 있게 쉽게 쓸 것
-✦ 타고난 성격 — 이 오행을 가진 사람이 실제로 어떤 성향인지 구체적 예시와 함께 설명. 강점 2가지, 그림자(단점) 1가지 솔직하게
-✦ 남들이 보는 나 vs 진짜 나 — 겉으로 드러나는 모습과 내면의 실제 모습이 어떻게 다른지. 공감이 가게 구체적으로
-✦ 이 성격의 숨겨진 재능 — 이 기질이 있는 사람만이 갖는 특별한 능력이나 매력
-✦ 성장 조언 — 이 성격이 더 빛나기 위해 실생활에서 실천할 수 있는 구체적인 한 가지`,
+[섹션 1] 나의 사주 핵심
+일주(日柱)의 오행이 무엇인지 자연에 빗댄 이미지로 설명. 사주를 처음 접하는 사람도 바로 이해할 수 있게 쉽고 생생하게. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 2] 타고난 성격
+이 오행을 가진 사람이 실제로 어떤 성향인지 구체적 예시와 함께. 강점 2가지, 그림자(단점) 1가지 솔직하게. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 3] 남들이 보는 나 vs 진짜 나
+겉으로 드러나는 모습과 내면의 실제 모습이 어떻게 다른지. 공감이 가게 구체적으로. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 4] 이 성격의 숨겨진 재능
+이 기질이 있는 사람만이 갖는 특별한 능력이나 매력. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 5] 성장 조언
+이 성격이 더 빛나기 위해 실생활에서 실천할 수 있는 구체적인 한 가지. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.`,
 
   career: `
-✦ 당신에게 맞는 일이란 — 이 사주를 가진 사람이 어떤 환경에서 일할 때 가장 빛나는지 구체적으로
-✦ 어울리는 직업 3가지 — 각 직업을 추천하는 이유를 사주 오행과 연결해서 쉽게 설명
-✦ 커리어 전성기 — 몇 살 전후가 가장 두각을 나타내는 시기이며 그 이유는 무엇인지
-✦ 일하다 자주 겪는 어려움 — 이 사주를 가진 사람이 직장이나 사업에서 반복적으로 맞닥뜨리는 패턴과 극복법
-✦ 성공을 위한 핵심 열쇠 — 이 사람이 반드시 기억해야 할 단 하나의 직업적 조언`,
+[섹션 1] 당신에게 맞는 일이란
+이 사주를 가진 사람이 어떤 환경에서 일할 때 가장 빛나는지. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 2] 어울리는 직업들
+각 직업을 추천하는 이유를 사주 오행과 연결해서 쉽게. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 3] 커리어 전성기
+몇 살 전후가 가장 두각을 나타내는 시기이며 그 이유는. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 4] 일하다 자주 겪는 어려움
+이 사주를 가진 사람이 반복적으로 맞닥뜨리는 패턴과 극복법. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 5] 성공을 위한 핵심 열쇠
+반드시 기억해야 할 단 하나의 직업적 조언. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.`,
 
   wealth: `
-✦ 이 사주의 재물 기운 — 재물성(財星)이 강한지 약한지, 부자 체질인지 아닌지를 쉬운 말로
-✦ 돈이 들어오는 통로 — 노력형인지, 운이 따르는 형인지, 사람을 통하는 형인지 구체적 경로
-✦ 돈이 새는 패턴 — 이 사주를 가진 사람이 돈을 잃거나 낭비하는 반복 패턴 2가지
-✦ 재물운이 피는 시기 — 언제 돈이 모이기 시작하는지, 어느 나이대가 재정적으로 가장 풍요로운지
-✦ 부를 키우는 실천 조언 — 지금 당장 실천할 수 있는 재물운 강화법 한 가지`,
+[섹션 1] 이 사주의 재물 기운
+재물성이 강한지 약한지, 부자 체질인지 아닌지를 쉬운 말로. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 2] 돈이 들어오는 통로
+노력형인지, 운이 따르는 형인지, 사람을 통하는 형인지 구체적 경로. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 3] 돈이 새는 패턴
+돈을 잃거나 낭비하는 반복 패턴 2가지. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 4] 재물운이 피는 시기
+언제 돈이 모이기 시작하는지, 어느 나이대가 가장 풍요로운지. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 5] 부를 키우는 실천 조언
+지금 당장 실천할 수 있는 재물운 강화법 한 가지. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.`,
 
   love: `
-✦ 이 사주의 사랑 방식 — 연애할 때 어떻게 감정을 표현하고 무엇을 중요하게 여기는지 솔직하게
-✦ 끌리는 이상형 — 오행상 잘 맞는 상대의 성격과 에너지. 왜 그런 사람에게 끌리는지 이유 포함
-✦ 연인으로서의 매력 — 이 사람이 연애할 때 상대에게 주는 가장 큰 선물과 매력
-✦ 연애에서 반복되는 상처 — 사주에서 보이는 연애 패턴의 아킬레스건. 공감이 가게 구체적으로
-✦ 운명의 인연을 만나는 법 — 이 사람에게 진짜 사랑이 찾아오는 시기와 상황`,
+[섹션 1] 이 사주의 사랑 방식
+연애할 때 어떻게 감정을 표현하고 무엇을 중요하게 여기는지 솔직하게. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 2] 끌리는 이상형
+오행상 잘 맞는 상대의 성격과 에너지. 왜 그런 사람에게 끌리는지 이유 포함. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 3] 연인으로서의 매력
+연애할 때 상대에게 주는 가장 큰 선물과 매력. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 4] 연애에서 반복되는 상처
+사주에서 보이는 연애 패턴의 아킬레스건. 공감이 가게 구체적으로. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 5] 운명의 인연을 만나는 법
+진짜 사랑이 찾아오는 시기와 상황. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.`,
 
   marriage: `
-✦ 결혼 체질인가? — 이 사주에서 배우자성(배우자 기운)이 얼마나 강한지, 결혼과 궁합이 좋은 사주인지
-✦ 이상적인 배우자 상 — 오행으로 본 가장 잘 맞는 파트너의 구체적인 성격 특성 3가지
-✦ 결혼하기 좋은 시기 — 몇 살 전후가 결혼에 유리하고 그 이유는 무엇인지
-✦ 결혼 생활에서의 모습 — 배우자로서의 강점과 파트너가 힘들어할 수 있는 부분 솔직하게
-✦ 행복한 결혼을 위한 조언 — 이 사주를 가진 사람이 결혼 생활에서 반드시 기억해야 할 것`,
+[섹션 1] 결혼 체질인가?
+배우자성이 얼마나 강한지, 결혼과 궁합이 좋은 사주인지. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 2] 이상적인 배우자 상
+오행으로 본 가장 잘 맞는 파트너의 구체적인 성격 특성. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 3] 결혼하기 좋은 시기
+몇 살 전후가 결혼에 유리하고 그 이유는. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 4] 결혼 생활에서의 모습
+배우자로서의 강점과 파트너가 힘들어할 수 있는 부분 솔직하게. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 5] 행복한 결혼을 위한 조언
+결혼 생활에서 반드시 기억해야 할 것. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.`,
 
   health: `
-✦ 타고난 체질 — 오행 균형으로 본 기본 체질. 강한 기운과 약한 기운이 신체에 어떻게 나타나는지
-✦ 건강한 부분 — 이 사주가 자연스럽게 보호하는 장기나 신체 부위
-✦ 주의해야 할 건강 포인트 — 약한 오행과 연결된 신체 부위나 질환 경향. 예방법 포함
-✦ 건강을 지키는 생활 습관 — 이 오행에 맞는 식습관, 운동법, 생활 리듬 2가지 구체적으로
-✦ 활력을 높이는 한 가지 — 지금 당장 실천할 수 있는 가장 효과적인 건강 관리법`,
+[섹션 1] 타고난 체질
+오행 균형으로 본 기본 체질. 강한 기운과 약한 기운이 신체에 어떻게 나타나는지. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 2] 건강한 부분
+이 사주가 자연스럽게 보호하는 장기나 신체 부위. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 3] 주의해야 할 건강 포인트
+약한 오행과 연결된 신체 부위나 질환 경향. 예방법 포함. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 4] 건강을 지키는 생활 습관
+이 오행에 맞는 식습관, 운동법, 생활 리듬 2가지 구체적으로. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 5] 활력을 높이는 한 가지
+지금 당장 실천할 수 있는 가장 효과적인 건강 관리법. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.`,
 
   family: `
-✦ 가족 기운의 전반적인 흐름 — 이 사주에서 가족·조상의 기운이 어떻게 흐르는지 전체적으로
-✦ 부모와의 관계 — 년주(年柱)와 월주(月柱)로 읽는 부모님과의 인연과 관계 패턴
-✦ 가족 안에서의 역할 — 이 사람이 자연스럽게 맡게 되는 가족 내 포지션과 역할
-✦ 가족 관계에서 반복되는 패턴 — 가정에서 자주 겪는 갈등이나 역학 관계
-✦ 따뜻한 가정을 만드는 법 — 이 사주를 가진 사람이 행복한 가정을 꾸리기 위한 실천 조언`,
+[섹션 1] 가족 기운의 전반적인 흐름
+이 사주에서 가족·조상의 기운이 어떻게 흐르는지. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 2] 부모와의 관계
+년주와 월주로 읽는 부모님과의 인연과 관계 패턴. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 3] 가족 안에서의 역할
+자연스럽게 맡게 되는 가족 내 포지션과 역할. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 4] 가족 관계에서 반복되는 패턴
+가정에서 자주 겪는 갈등이나 역학 관계. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 5] 따뜻한 가정을 만드는 법
+행복한 가정을 꾸리기 위한 실천 조언. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.`,
 
   children: `
-✦ 자녀 기운 — 이 사주에서 자녀성(子女星)이 어떻게 나타나는지. 자녀와의 인연이 강한지
-✦ 자녀와의 관계 — 어떤 부모-자녀 관계를 맺게 될지, 어떤 유대감을 나누는지
-✦ 자녀를 갖기 좋은 시기 — 자녀와 인연이 깊어지는 나이대나 시기
-✦ 부모로서의 스타일 — 이 사주를 가진 사람이 자연스럽게 보이는 양육 방식의 강점과 보완점
-✦ 자녀에게 물려주는 것 — 이 사람이 다음 세대에게 남기는 가장 소중한 유산`,
+[섹션 1] 자녀 기운
+자녀성이 어떻게 나타나는지. 자녀와의 인연이 강한지. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 2] 자녀와의 관계
+어떤 부모-자녀 관계를 맺게 될지, 어떤 유대감을 나누는지. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 3] 자녀를 갖기 좋은 시기
+자녀와 인연이 깊어지는 나이대나 시기. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 4] 부모로서의 스타일
+자연스럽게 보이는 양육 방식의 강점과 보완점. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 5] 자녀에게 물려주는 것
+다음 세대에게 남기는 가장 소중한 유산. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.`,
 
   mentor: `
-✦ 귀인(貴人) 기운 — 이 사주에 귀인(나를 도와주는 고마운 사람) 기운이 얼마나 있는지
-✦ 나를 도와주는 사람의 유형 — 어떤 성격이나 직업을 가진 사람이 나의 귀인이 될 가능성이 높은지
-✦ 귀인을 만나는 시기와 상황 — 어떤 시기에, 어떤 상황에서 조력자가 나타나는지
-✦ 나도 누군가의 귀인 — 내가 자연스럽게 다른 사람에게 도움을 주는 방식과 역할
-✦ 좋은 인연을 만드는 법 — 이 사주를 가진 사람이 귀인을 더 많이 만나기 위한 실천 조언`,
+[섹션 1] 귀인 기운
+이 사주에 귀인 기운이 얼마나 있는지. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 2] 나를 도와주는 사람의 유형
+어떤 성격이나 직업을 가진 사람이 귀인이 될 가능성이 높은지. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 3] 귀인을 만나는 시기와 상황
+어떤 시기에, 어떤 상황에서 조력자가 나타나는지. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 4] 나도 누군가의 귀인
+내가 자연스럽게 다른 사람에게 도움을 주는 방식과 역할. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 5] 좋은 인연을 만드는 법
+귀인을 더 많이 만나기 위한 실천 조언. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.`,
 
   destiny: `
-✦ 이 삶의 큰 테마 — 이 사주 전체를 관통하는 인생의 핵심 주제를 한 문장으로. 왜 그런지 설명
-✦ 인생 전반기 (1–30세) — 이 시기의 주요 에너지와 배워야 할 핵심 교훈
-✦ 인생 중반기 (31–60세) — 전성기는 언제이고, 어떤 변화와 도전이 기다리는지
-✦ 인생 후반기 (61세~) — 노년의 기운과 남기게 될 유산
-✦ 이 영혼이 이 세상에 온 이유 — 가장 깊은 운명의 메시지를 시적이고 감동적으로`,
+[섹션 1] 이 삶의 큰 테마
+사주 전체를 관통하는 인생의 핵심 주제. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 2] 인생 전반기 (1–30세)
+이 시기의 주요 에너지와 배워야 할 핵심 교훈. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 3] 인생 중반기 (31–60세)
+전성기는 언제이고, 어떤 변화와 도전이 기다리는지. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 4] 인생 후반기 (61세~)
+노년의 기운과 남기게 될 유산. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.
+
+[섹션 5] 이 영혼이 이 세상에 온 이유
+가장 깊은 운명의 메시지를 시적이고 감동적으로. 섹션 제목은 이 내용을 담은 창의적이고 짧은 시적 표현으로 직접 만들어주세요.`,
 }
 
 function buildPersonalPrompt(req: ReadingRequest) {
@@ -152,23 +242,27 @@ PERSON'S INFORMATION:
 READING TYPE: ${cat}
 OUTPUT LANGUAGE: ${lang}
 
-CRITICAL INSTRUCTIONS — READ CAREFULLY:
-1. Write ENTIRELY in ${lang}. Every single word must be in ${lang}.
-2. ALWAYS start with a 1-sentence warm intro that feels like a friend is about to tell you something exciting about yourself.
-3. NEVER use academic or mystical jargon without immediately translating it into everyday life. Instead of "your Wood element is dominant" say "you're the type who always has ten new ideas before breakfast — you can't help but grow." Instead of "Metal controls Wood in your chart" say "you sometimes hold yourself to impossible standards, which is both your superpower and your kryptonite."
-4. Use REAL LIFE comparisons: celebrities, everyday situations, dating scenarios, work moments. Make the person go "omg that's SO me."
-5. Write like you're texting your most insightful friend — warm, direct, a little poetic, occasionally funny.
-6. Be SPECIFIC to this person's actual Saju data — but explain WHY in human terms, not astrological terms.
-7. Each section should be 3-5 sentences. Conversational flow, not bullet points.
-8. Include at least one line per section that feels so specific the reader will screenshot it.
-9. Do NOT use # markdown headers. Use ✦ symbol only.
-10. End with a closing message that feels like a warm hug — personal and encouraging.
-11. BE HONEST. If this person's chart has genuine weaknesses, blind spots, or shadow sides — say so clearly and compassionately. A reading that only says beautiful things is useless. Real trust comes from honesty. If someone's chart shows a tendency to self-sabotage, struggle with money, or repeat unhealthy patterns — name it. Balance every difficult truth with a path forward, but DO NOT avoid it.
+CRITICAL FORMATTING RULES — THESE ARE ABSOLUTE:
+- NEVER use any markdown: no **, no *, no #, no ___, no ~~, no backticks, no [links]
+- Section titles are plain text on their own line — NO symbols before or after them
+- After each section title, write flowing paragraphs. NO bullet points. NO dashes. NO numbered lists.
+- The section title style: a short, poetic, evocative phrase that captures the essence (e.g. "불꽃처럼 살아있는 당신의 내면") followed by a blank line, then the paragraph content.
 
-FOLLOW THIS EXACT FORMAT:
+WRITING STYLE:
+1. Write ENTIRELY in ${lang}. Every single word must be in ${lang}.
+2. NEVER use academic or mystical jargon without immediately translating it into everyday life. Instead of "your Wood element is dominant" say "you're the type who always has ten new ideas before breakfast." Instead of "Metal controls Wood in your chart" say "you sometimes hold yourself to impossible standards, which is both your superpower and your kryptonite."
+3. Use REAL LIFE comparisons: everyday situations, relatable moments. Make the person go "omg that's SO me."
+4. Write like the world's most insightful friend — warm, direct, a little poetic, occasionally funny.
+5. Be SPECIFIC to this person's actual Saju data — explain WHY in human terms, not astrological terms.
+6. Each section: 3–5 sentences of flowing, conversational prose. No lists.
+7. Include at least one line per section so specific the reader will screenshot it.
+8. End with a warm, personal closing message.
+9. BE HONEST. If this person's chart has genuine weaknesses or blind spots — say so clearly and compassionately. Balance every difficult truth with a path forward.
+
+FOLLOW THIS EXACT FORMAT (section titles are plain text, content is flowing paragraphs):
 ${guide}
 
-TOTAL LENGTH: 500-650 words. Rich, detailed, and personal — not a generic horoscope.`
+TOTAL LENGTH: 500–650 words. Rich, detailed, and personal — not a generic horoscope.`
 }
 
 function buildCompatPrompt(req: ReadingRequest) {
@@ -186,27 +280,47 @@ Saju: ${sajuDesc(s2)} — Day Master: ${elementDescription(s2.day.element, lang)
 
 OUTPUT LANGUAGE: ${lang}
 
-CRITICAL INSTRUCTIONS:
+CRITICAL FORMATTING RULES — ABSOLUTE:
+- NEVER use any markdown: no **, no *, no #, no ___, no ~~
+- Section titles are plain text on their own line — NO symbols before or after them
+- After each section title, write flowing paragraphs. NO bullet points. NO dashes. NO numbered lists.
+- Section title style: a short, poetic phrase that captures the section's essence, on its own line, followed by a blank line, then the paragraph content.
+
+WRITING STYLE:
 1. Write ENTIRELY in ${lang}.
-2. NO jargon — translate everything into real life. Instead of "Wood feeds Fire elementally" say "one of you naturally energizes the other — like the person who always knows exactly what to say when the other is stressed."
-3. Write like the world's most insightful friend who happens to know ancient Korean wisdom. Warm, direct, occasionally funny.
+2. NO jargon — translate everything into real life. Instead of "Wood feeds Fire elementally" say "one of you naturally energizes the other."
+3. Write like the world's most insightful friend — warm, direct, occasionally funny.
 4. Make each section feel so specific the reader screenshots it.
-5. Each section 3-5 sentences. Conversational, not academic.
-6. Do NOT use # markdown. Use ✦ only.
-7. BE HONEST about the compatibility. If the elements clash significantly, say so. If one person tends to dominate the other, name it. If this is a challenging pairing, be truthful — a low score with real insight is more valuable than a false 90/100. Always include what makes the pairing work AND what genuinely doesn't.
+5. Each section 3–5 sentences. Flowing prose, not academic.
+6. BE HONEST about the compatibility. If the elements clash, say so. A real score with honest insight is worth more than a false 90/100.
 
-FOLLOW THIS EXACT FORMAT:
+FOLLOW THIS EXACT FORMAT (plain text titles, flowing paragraphs beneath each):
 
-✦ Compatibility Score — [X/100] with a one-line dramatic verdict. Briefly explain why this score.
-✦ Your Two Energies — Describe each person's core Saju energy using vivid metaphors. How do these two energies look when they meet?
-✦ Elemental Chemistry — How do their elements interact? Use nature metaphors (fire and wood, water and earth, etc.) to explain the dynamic in a way anyone can understand.
-✦ Emotional Connection — How deeply do they understand each other's hearts? What makes them feel truly seen by the other?
-✦ What Makes This Pair Powerful — The unique strengths of this combination. What can they achieve together that neither could alone?
-✦ The Challenge to Navigate — The recurring friction point. Be honest and specific — this is the most important section. Include a practical tip.
-✦ A Past Life Connection — In another time, another world — what were these two souls to each other? One vivid, cinematic sentence.
-✦ The Verdict — A poetic, cinematic final sentence that captures the essence of this pair's story.
+궁합 점수
+[점수/100] — 이 두 사람의 운명을 한 문장으로 극적으로 선언하세요. 왜 이 점수인지 짧게 설명하세요.
 
-Length: 550-650 words. No # markdown.`
+두 사람의 에너지
+각자의 사주 핵심 에너지를 생생한 자연 비유로 묘사하세요. 이 두 에너지가 만나면 어떤 모습인지.
+
+오행의 케미
+두 사람의 오행이 어떻게 상호작용하는지 자연 비유로 쉽게 설명하세요.
+
+감정적 연결
+서로의 마음을 얼마나 깊이 이해하는지. 무엇이 서로를 진심으로 이해받는다고 느끼게 하는지.
+
+이 관계의 빛나는 힘
+이 조합만의 강점. 둘이 함께라면 혼자서는 못 하는 무엇이 가능한지.
+
+피해갈 수 없는 도전
+반복되는 마찰 포인트. 솔직하고 구체적으로 — 이 섹션이 가장 중요합니다. 실용적인 조언 포함.
+
+전생의 인연
+두 사람이 전생에서 어떤 관계였는지, 무슨 일이 있었는지, 그 인연이 이번 생에 어떻게 이어지는지. 2~3문장으로 생생하고 영화적으로 묘사하세요.
+
+운명의 한 마디
+이 두 사람의 이야기를 담은 시적이고 영화적인 마지막 한 문장.
+
+Length: 550–650 words.`
 }
 
 function buildIdolPrompt(req: ReadingRequest) {
@@ -223,7 +337,7 @@ function buildIdolPrompt(req: ReadingRequest) {
     ? `like you're narrating the meet-cute scene of a K-drama`
     : `like you're narrating a cinematic, emotional movie scene`
 
-  return `You are a beloved Korean Saju master who creates magical, heartfelt celebrity compatibility readings for devoted fans worldwide. You make ancient Korean wisdom feel exciting, personal, and deeply meaningful — regardless of whether the celebrity is Korean or international.
+  return `You are a beloved Korean Saju master who creates magical, heartfelt celebrity compatibility readings for devoted fans worldwide. You make ancient Korean wisdom feel exciting, personal, and deeply meaningful.
 
 THE FAN:
 - Born: ${req.person1.birthDate}, Time: ${req.person1.birthTime}, Gender: ${req.person1.gender}
@@ -235,26 +349,44 @@ THE CELEBRITY: ${celeb.name} (${celeb.group})
 
 OUTPUT LANGUAGE: ${lang}
 
-CRITICAL INSTRUCTIONS:
+CRITICAL FORMATTING RULES — ABSOLUTE:
+- NEVER use any markdown: no **, no *, no #, no ___, no ~~
+- Section titles are plain text on their own line — NO symbols before or after them
+- After each section title, write flowing paragraphs. NO bullet points. NO dashes. NO numbered lists.
+- Section title style: a short, emotionally evocative Korean phrase on its own line, followed by a blank line, then the paragraph content.
+
+WRITING STYLE:
 1. Write ENTIRELY in ${lang}.
 2. NO astrology jargon — everything must translate to ${dramaRef}
 3. Make it cinematic and emotional — ${cinematicRef}.
-4. Every section should have at least one line the fan will IMMEDIATELY screenshot and send to their group chat.
-5. Each section 3-5 sentences. Emotional, personal, specific.
-6. Do NOT use # markdown. Use ✦ only.
-7. BE HONEST about the fate score — if the elements clash, a lower score with beautiful honesty is more powerful than a false perfect score. Even difficult pairings have their magic — find it.
+4. Every section should have at least one line the fan will IMMEDIATELY screenshot.
+5. Each section 3–5 sentences. Emotional, personal, specific. Flowing prose only.
+6. BE HONEST about the fate score — a real score with honest insight beats a false perfect score. Even hard pairings have their magic — find it.
 
-FOLLOW THIS EXACT FORMAT:
+FOLLOW THIS EXACT FORMAT (plain text section titles, flowing paragraphs beneath each):
 
-✦ Fate Score — [X/100] — Reveal it dramatically with a breathtaking one-line hook that makes the fan's heart race.
-✦ Your Two Worlds — Paint a vivid picture of both energy types. What is the fan like? What is ${celeb.name} like? Use nature and cinematic metaphors.
-✦ The Cosmic Chemistry — How do their Saju elements interact? Explain the elemental dynamic in beautiful, accessible language. Does fire meet wind? Does ocean meet shore?
-✦ Why ${celeb.name} Would Fall For You — Based purely on the fan's Saju, describe 2-3 specific qualities that would genuinely captivate ${celeb.name}. Make it feel real and personal.
-✦ Your Dynamic Together — Who leads? Who softens? How does power and affection flow between these two energies? Paint the scene.
-✦ A Past Life Connection — In another time, another world — what were these two souls to each other? One vivid, cinematic sentence.
-✦ Message from the Universe — The final word, written as if the cosmos itself is speaking directly to the fan. Poetic, beautiful, and unforgettable.
+운명 점수
+[점수/100] — 이 운명을 한 문장으로 극적으로 선언하세요. 팬의 심장이 두근거리게 만드세요.
 
-Length: 550-700 words. Make it emotional, cinematic, unforgettable. No # markdown.`
+두 사람의 세계
+팬과 ${celeb.name} 각자의 에너지를 자연과 영화적 비유로 생생하게 그려내세요. 이 두 에너지가 만나면 어떤 장면이 펼쳐지는지.
+
+우주가 맺어준 케미
+두 사람의 사주 오행이 어떻게 맞닿는지 아름답고 쉬운 언어로 설명하세요. 불꽃이 바람을 만나는지, 바다가 해변을 만나는지.
+
+${celeb.name}이(가) 당신에게 빠지는 이유
+팬의 사주에서 보이는 2~3가지 특별한 매력이 ${celeb.name}을(를) 어떻게 사로잡을지. 진짜처럼 느껴지게, 개인적으로.
+
+두 사람이 함께라면
+누가 이끌고 누가 감싸는지. 이 두 에너지 사이에서 사랑과 힘이 어떻게 흐르는지. 그 장면을 그려내세요.
+
+전생의 기억
+두 사람이 전생에서 어떤 관계였는지 — 연인이었는지, 스쳐간 인연이었는지, 서로를 지켜줬는지 — 그 구체적인 이야기를 2~3문장으로 영화처럼 묘사하세요. 전생에서 무슨 일이 있었는지, 그 감정이 이번 생에 어떻게 이어지는지 반드시 포함하세요.
+
+우주가 당신에게 전하는 말
+마치 우주가 직접 팬에게 말을 건네는 것처럼 — 시적이고 아름답고 잊을 수 없는 마지막 메시지.
+
+Length: 550–700 words. Emotional, cinematic, unforgettable.`
 }
 
 // ── API 핸들러 ────────────────────────────────────────────────────
