@@ -531,6 +531,11 @@ export default function DashboardClient({ user, initialCredits }: Props) {
         : mode === 'compatibility' ? t(lang, 'compatibility') : t(lang, 'idol')
       setResultTitle(catLabel)
 
+      // 아이돌 궁합이면 랭킹 자동 갱신
+      if (mode === 'idol') {
+        setTimeout(() => fetchRankings(), 1500)
+      }
+
     } catch (e: unknown) {
       showToast(e instanceof Error ? e.message : '오류가 발생했어요. 다시 시도해주세요.')
     } finally {
