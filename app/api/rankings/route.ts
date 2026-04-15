@@ -22,7 +22,7 @@ export async function GET() {
 
     return NextResponse.json({ individual: individual ?? [], group: group ?? [] })
   } catch (error) {
-    console.error('Rankings API error:', error)
-    return NextResponse.json({ individual: [], group: [] })
+    console.error('[rankings] error:', JSON.stringify(error))
+    return NextResponse.json({ individual: [], group: [], error: String(error) })
   }
 }

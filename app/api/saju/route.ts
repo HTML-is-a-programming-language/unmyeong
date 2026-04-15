@@ -435,10 +435,12 @@ export async function POST(request: Request) {
     // 3-1. 아이돌 궁합 통계 기록 (비동기, 실패해도 결과에 영향 없음)
     if (body.mode === 'idol' && body.celebrity) {
       const celeb = body.celebrity
-      void supabase.rpc('increment_idol_count', {
+      const { error: rpcError } = await supabase.rpc('increment_idol_count', {
         p_name: celeb.name,
         p_group: celeb.group,
       })
+      if (rpcError) console.error('[idol_stats] RPC error:', rpcError)
+      else console.log('[idol_stats] recorded:', celeb.name, celeb.group)
     }
 
     // 4. 프롬프트 생성 및 Claude 호출
