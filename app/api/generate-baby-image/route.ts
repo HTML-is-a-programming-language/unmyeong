@@ -3,18 +3,24 @@ import { createClient } from '@/lib/supabase/server'
 import { GoogleGenAI } from '@google/genai'
 
 export const runtime = 'nodejs'
+export const maxDuration = 120
 
 const IMAGE_CREDIT_COST = 3
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
 
 export async function POST(request: Request) {
+  const supabase = await createClient()
+  let creditDeducted = false
+  let originalCredits = 0
+  let userId = ''
+
   try {
     // 1. 인증
-    const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
       return NextResponse.json({ error: '로그인이 필요해요.' }, { status: 401 })
     }
+    userId = user.id
 
     // 2. FormData 파싱
     const formData = await request.formData()
@@ -29,7 +35,7 @@ export async function POST(request: Request) {
     const { data: profile } = await supabase
       .from('profiles')
       .select('credits')
-      .eq('id', user.id)
+      .eq('id', userId)
       .single()
 
     if (!profile || profile.credits < IMAGE_CREDIT_COST) {
@@ -38,6 +44,8 @@ export async function POST(request: Request) {
         { status: 402 }
       )
     }
+
+    originalCredits = profile.credits
 
     // 4. File → base64 변환
     const toBase64 = async (file: File) => {
@@ -56,7 +64,8 @@ export async function POST(request: Request) {
     await supabase
       .from('profiles')
       .update({ credits: profile.credits - IMAGE_CREDIT_COST })
-      .eq('id', user.id)
+      .eq('id', userId)
+    creditDeducted = true
 
     // 6. Gemini 이미지 생성
     const response = await ai.models.generateContent({
@@ -106,8 +115,8 @@ The two parent photos are attached below.`,
       // 이미지 생성 실패 시 크레딧 복구
       await supabase
         .from('profiles')
-        .update({ credits: profile.credits })
-        .eq('id', user.id)
+        .update({ credits: originalCredits })
+        .eq('id', userId)
       return NextResponse.json({ error: '이미지 생성에 실패했어요.' }, { status: 502 })
     }
 
@@ -117,12 +126,18 @@ The two parent photos are attached below.`,
 
     return NextResponse.json({
       imageUrl,
-      remainingCredits: profile.credits - IMAGE_CREDIT_COST,
+      remainingCredits: originalCredits - IMAGE_CREDIT_COST,
     })
 
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error)
     console.error('Baby image generation error:', msg)
-    return NextResponse.json({ error: `이미지 생성 중 오류: ${msg}` }, { status: 500 })
+    if (creditDeducted && userId) {
+      await supabase
+        .from('profiles')
+        .update({ credits: originalCredits })
+        .eq('id', userId)
+    }
+    return NextResponse.json({ error: `이미지 생성 중 오류가 발생했어요. 크레딧은 환불됩니다.` }, { status: 500 })
   }
 }

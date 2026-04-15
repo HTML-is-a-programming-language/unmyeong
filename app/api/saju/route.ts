@@ -390,10 +390,16 @@ Length: 650–750 words. Emotional, cinematic, unforgettable.`
 }
 
 // ── API 핸들러 ────────────────────────────────────────────────────
+export const maxDuration = 120 // Vercel Pro: 최대 120초
+
 export async function POST(request: Request) {
+  const supabase = await createClient()
+  let creditDeducted = false
+  let originalCredits = 0
+  let cost = 0
+
   try {
     // 1. 인증 확인
-    const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
       return NextResponse.json({ error: '로그인이 필요해요.' }, { status: 401 })
@@ -401,12 +407,16 @@ export async function POST(request: Request) {
 
     const body: ReadingRequest = await request.json()
 
-    // 2. 크레딧 확인 및 차감 (서버에서만 처리 — 클라이언트 조작 불가)
+    // 입력값 기본 검증
+    if (!body.mode || !body.person1?.birthDate) {
+      return NextResponse.json({ error: '필수 정보가 누락됐어요.' }, { status: 400 })
+    }
+
+    // 2. 크레딧 확인
     const baseCostMap = { personal: 1, compatibility: 2, idol: 3 }
     const multiCount = (body.mode === 'personal' && body.categories && body.categories.length > 1)
-      ? body.categories.length
-      : 1
-    const cost = baseCostMap[body.mode] * multiCount
+      ? body.categories.length : 1
+    cost = baseCostMap[body.mode] * multiCount
 
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
@@ -417,6 +427,8 @@ export async function POST(request: Request) {
     if (profileError || !profile) {
       return NextResponse.json({ error: '프로필을 찾을 수 없어요.' }, { status: 400 })
     }
+
+    originalCredits = profile.credits
 
     if (profile.credits < cost) {
       return NextResponse.json({ error: '크레딧이 부족해요.' }, { status: 402 })
@@ -431,31 +443,32 @@ export async function POST(request: Request) {
     if (updateError) {
       return NextResponse.json({ error: '크레딧 처리 중 오류가 발생했어요.' }, { status: 500 })
     }
+    creditDeducted = true
 
-    // 3-1. 아이돌 궁합 통계 기록 (비동기, 실패해도 결과에 영향 없음)
+    // 3-1. 아이돌 궁합 통계 기록
     if (body.mode === 'idol' && body.celebrity) {
       const celeb = body.celebrity
-      await supabase.rpc('increment_idol_count', {
-        p_name: celeb.name,
-        p_group: celeb.group,
-      })
+      await supabase.rpc('increment_idol_count', { p_name: celeb.name, p_group: celeb.group })
     }
 
     // 4. 프롬프트 생성 및 Claude 호출
     let reading = ''
 
     if (body.mode === 'personal' && body.categories && body.categories.length > 1) {
-      // 다중 카테고리: 순서대로 호출 후 결합
       const readings: string[] = []
       for (const cat of body.categories) {
-        const catBody = { ...body, category: cat }
-        const catPrompt = buildPersonalPrompt(catBody)
+        const catPrompt = buildPersonalPrompt({ ...body, category: cat })
         const catResponse = await anthropic.messages.create({
           model: 'claude-sonnet-4-6',
-          max_tokens: 2000,
+          max_tokens: 4096,
           messages: [{ role: 'user', content: catPrompt }],
         })
-        readings.push(catResponse.content[0].type === 'text' ? catResponse.content[0].text : '')
+        if (catResponse.stop_reason === 'max_tokens') {
+          console.warn('[saju] max_tokens reached for category:', cat)
+        }
+        const text = catResponse.content[0]?.type === 'text' ? catResponse.content[0].text : ''
+        if (!text) throw new Error('AI 응답이 비어있어요.')
+        readings.push(text)
       }
       reading = readings.join('\n\n─────────────────────────\n\n')
     } else {
@@ -463,22 +476,34 @@ export async function POST(request: Request) {
       if (body.mode === 'personal')           prompt = buildPersonalPrompt(body)
       else if (body.mode === 'compatibility') prompt = buildCompatPrompt(body)
       else if (body.mode === 'idol')          prompt = buildIdolPrompt(body)
+      else return NextResponse.json({ error: '잘못된 모드예요.' }, { status: 400 })
 
       const response = await anthropic.messages.create({
         model: 'claude-sonnet-4-6',
-        max_tokens: 2000,
+        max_tokens: 4096,
         messages: [{ role: 'user', content: prompt }],
       })
-      reading = response.content[0].type === 'text' ? response.content[0].text : ''
+      if (response.stop_reason === 'max_tokens') {
+        console.warn('[saju] max_tokens reached for mode:', body.mode)
+      }
+      reading = response.content[0]?.type === 'text' ? response.content[0].text : ''
+      if (!reading) throw new Error('AI 응답이 비어있어요.')
     }
 
-    return NextResponse.json({
-      reading,
-      remainingCredits: profile.credits - cost,
-    })
+    return NextResponse.json({ reading, remainingCredits: originalCredits - cost })
 
   } catch (error) {
     console.error('Saju API error:', error)
-    return NextResponse.json({ error: '서버 오류가 발생했어요. 다시 시도해주세요.' }, { status: 500 })
+
+    // Claude 호출 실패 시 크레딧 환불
+    if (creditDeducted) {
+      await supabase
+        .from('profiles')
+        .update({ credits: originalCredits })
+        .eq('id', (await supabase.auth.getUser()).data.user?.id ?? '')
+        .then(({ error: e }) => { if (e) console.error('Credit refund failed:', e) })
+    }
+
+    return NextResponse.json({ error: '서버 오류가 발생했어요. 크레딧은 환불됩니다.' }, { status: 500 })
   }
 }
