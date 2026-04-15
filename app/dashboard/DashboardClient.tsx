@@ -7,7 +7,7 @@ import type { ReadingMode, ReadingCategory, Celebrity } from '@/types'
 import styles from './dashboard.module.css'
 import BuyCreditsModal from '@/components/BuyCreditsModal'
 import ShareCard from '@/components/ShareCard'
-import { t } from '@/lib/i18n'
+import { t, tCredits } from '@/lib/i18n'
 
 // ── 상수 데이터 ──────────────────────────────────────────────────
 
@@ -131,42 +131,151 @@ const GROUPS: Record<string, Celebrity[]> = {
     { id:75, name:'I.N',       group:'Stray Kids', birth:'2001-02-08', gender:'male', sign:'♒ Aquarius' },
   ],
   'EXO': [
-    { id:60, name:'Suho',   group:'EXO', birth:'1991-05-22', gender:'male', sign:'♊ Gemini' },
-    { id:61, name:'Baekhyun',group:'EXO',birth:'1992-05-06', gender:'male', sign:'♉ Taurus' },
-    { id:62, name:'Chanyeol',group:'EXO',birth:'1992-11-27', gender:'male', sign:'♐ Sagittarius' },
-    { id:63, name:'D.O',    group:'EXO', birth:'1993-01-12', gender:'male', sign:'♑ Capricorn' },
-    { id:64, name:'Kai',    group:'EXO', birth:'1994-01-14', gender:'male', sign:'♑ Capricorn' },
-    { id:65, name:'Sehun',  group:'EXO', birth:'1994-04-12', gender:'male', sign:'♈ Aries' },
+    { id:60, name:'Suho',    group:'EXO', birth:'1991-05-22', gender:'male', sign:'♊ Gemini' },
+    { id:61, name:'Baekhyun',group:'EXO', birth:'1992-05-06', gender:'male', sign:'♉ Taurus' },
+    { id:62, name:'Chanyeol',group:'EXO', birth:'1992-11-27', gender:'male', sign:'♐ Sagittarius' },
+    { id:63, name:'D.O',     group:'EXO', birth:'1993-01-12', gender:'male', sign:'♑ Capricorn' },
+    { id:64, name:'Kai',     group:'EXO', birth:'1994-01-14', gender:'male', sign:'♑ Capricorn' },
+    { id:65, name:'Sehun',   group:'EXO', birth:'1994-04-12', gender:'male', sign:'♈ Aries' },
+  ],
+  'SHINee': [
+    { id:300, name:'Onew',  group:'SHINee', birth:'1989-12-14', gender:'male', sign:'♐ Sagittarius' },
+    { id:301, name:'Key',   group:'SHINee', birth:'1991-09-23', gender:'male', sign:'♎ Libra' },
+    { id:302, name:'Minho', group:'SHINee', birth:'1991-12-09', gender:'male', sign:'♐ Sagittarius' },
+    { id:303, name:'Taemin',group:'SHINee', birth:'1993-07-18', gender:'male', sign:'♋ Cancer' },
+  ],
+  'Red Velvet': [
+    { id:310, name:'Irene',  group:'Red Velvet', birth:'1991-03-29', gender:'female', sign:'♈ Aries' },
+    { id:311, name:'Seulgi', group:'Red Velvet', birth:'1994-02-10', gender:'female', sign:'♒ Aquarius' },
+    { id:312, name:'Wendy',  group:'Red Velvet', birth:'1994-02-21', gender:'female', sign:'♒ Aquarius' },
+    { id:313, name:'Joy',    group:'Red Velvet', birth:'1996-09-03', gender:'female', sign:'♍ Virgo' },
+    { id:314, name:'Yeri',   group:'Red Velvet', birth:'1999-03-05', gender:'female', sign:'♓ Pisces' },
+  ],
+  'MAMAMOO': [
+    { id:320, name:'Solar',   group:'MAMAMOO', birth:'1991-02-21', gender:'female', sign:'♒ Aquarius' },
+    { id:321, name:'Moonbyul',group:'MAMAMOO', birth:'1992-12-22', gender:'female', sign:'♑ Capricorn' },
+    { id:322, name:'Wheein',  group:'MAMAMOO', birth:'1995-04-17', gender:'female', sign:'♈ Aries' },
+    { id:323, name:'Hwasa',   group:'MAMAMOO', birth:'1995-07-23', gender:'female', sign:'♋ Cancer' },
+  ],
+  'NewJeans': [
+    { id:330, name:'Minji',    group:'NewJeans', birth:'2004-05-07', gender:'female', sign:'♉ Taurus' },
+    { id:331, name:'Hanni',    group:'NewJeans', birth:'2004-10-06', gender:'female', sign:'♎ Libra' },
+    { id:332, name:'Danielle', group:'NewJeans', birth:'2005-04-11', gender:'female', sign:'♈ Aries' },
+    { id:333, name:'Haerin',   group:'NewJeans', birth:'2006-05-15', gender:'female', sign:'♉ Taurus' },
+    { id:334, name:'Hyein',    group:'NewJeans', birth:'2008-04-21', gender:'female', sign:'♈ Aries' },
+  ],
+  '(G)I-DLE': [
+    { id:340, name:'Miyeon',  group:'(G)I-DLE', birth:'1997-01-31', gender:'female', sign:'♒ Aquarius' },
+    { id:341, name:'Minnie',  group:'(G)I-DLE', birth:'1997-10-23', gender:'female', sign:'♏ Scorpio' },
+    { id:342, name:'Soyeon',  group:'(G)I-DLE', birth:'1998-08-26', gender:'female', sign:'♍ Virgo' },
+    { id:343, name:'Yuqi',    group:'(G)I-DLE', birth:'1999-09-23', gender:'female', sign:'♎ Libra' },
+    { id:344, name:'Shuhua',  group:'(G)I-DLE', birth:'2000-01-06', gender:'female', sign:'♑ Capricorn' },
+  ],
+  'NCT 127': [
+    { id:350, name:'Taeil',   group:'NCT 127', birth:'1994-06-14', gender:'male', sign:'♊ Gemini' },
+    { id:351, name:'Johnny',  group:'NCT 127', birth:'1995-02-09', gender:'male', sign:'♒ Aquarius' },
+    { id:352, name:'Taeyong', group:'NCT 127', birth:'1995-07-01', gender:'male', sign:'♋ Cancer' },
+    { id:353, name:'Yuta',    group:'NCT 127', birth:'1995-10-26', gender:'male', sign:'♏ Scorpio' },
+    { id:354, name:'Doyoung', group:'NCT 127', birth:'1996-02-01', gender:'male', sign:'♒ Aquarius' },
+    { id:355, name:'Jaehyun', group:'NCT 127', birth:'1997-02-14', gender:'male', sign:'♒ Aquarius' },
+    { id:356, name:'Mark',    group:'NCT 127', birth:'2000-08-02', gender:'male', sign:'♌ Leo' },
+    { id:357, name:'Haechan', group:'NCT 127', birth:'2000-06-06', gender:'male', sign:'♊ Gemini' },
+  ],
+  'NCT Dream': [
+    { id:360, name:'Renjun', group:'NCT Dream', birth:'2000-03-23', gender:'male', sign:'♈ Aries' },
+    { id:361, name:'Jeno',   group:'NCT Dream', birth:'2000-04-23', gender:'male', sign:'♉ Taurus' },
+    { id:362, name:'Jaemin', group:'NCT Dream', birth:'2000-08-13', gender:'male', sign:'♌ Leo' },
+    { id:363, name:'Chenle', group:'NCT Dream', birth:'2001-11-22', gender:'male', sign:'♐ Sagittarius' },
+    { id:364, name:'Jisung', group:'NCT Dream', birth:'2002-02-05', gender:'male', sign:'♒ Aquarius' },
+  ],
+  'RIIZE': [
+    { id:370, name:'Shotaro', group:'RIIZE', birth:'2000-11-25', gender:'male', sign:'♐ Sagittarius' },
+    { id:371, name:'Sungchan',group:'RIIZE', birth:'2001-09-13', gender:'male', sign:'♍ Virgo' },
+    { id:372, name:'Eunseok', group:'RIIZE', birth:'2002-03-21', gender:'male', sign:'♈ Aries' },
+    { id:373, name:'Sohee',   group:'RIIZE', birth:'2003-04-11', gender:'male', sign:'♈ Aries' },
+    { id:374, name:'Wonbin',  group:'RIIZE', birth:'2004-08-27', gender:'male', sign:'♍ Virgo' },
+    { id:375, name:'Anton',   group:'RIIZE', birth:'2004-10-02', gender:'male', sign:'♎ Libra' },
+  ],
+  'ZEROBASEONE': [
+    { id:380, name:'Sung Hanbin',  group:'ZEROBASEONE', birth:'2002-09-26', gender:'male', sign:'♎ Libra' },
+    { id:381, name:'Zhang Hao',    group:'ZEROBASEONE', birth:'2002-03-16', gender:'male', sign:'♓ Pisces' },
+    { id:382, name:'Seok Matthew', group:'ZEROBASEONE', birth:'2002-06-02', gender:'male', sign:'♊ Gemini' },
+    { id:383, name:'Kim Jiwoong',  group:'ZEROBASEONE', birth:'2000-03-30', gender:'male', sign:'♈ Aries' },
+    { id:384, name:'Park Gunwook', group:'ZEROBASEONE', birth:'2005-05-11', gender:'male', sign:'♉ Taurus' },
+    { id:385, name:'Han Yujin',    group:'ZEROBASEONE', birth:'2005-10-21', gender:'male', sign:'♎ Libra' },
+    { id:386, name:'Kim Gyuvin',   group:'ZEROBASEONE', birth:'2003-04-21', gender:'male', sign:'♈ Aries' },
+    { id:387, name:'Tae Rae',      group:'ZEROBASEONE', birth:'2003-11-28', gender:'male', sign:'♐ Sagittarius' },
+    { id:388, name:'Ricky',        group:'ZEROBASEONE', birth:'2006-12-26', gender:'male', sign:'♑ Capricorn' },
+  ],
+  'BOYNEXTDOOR': [
+    { id:390, name:'Sungho',  group:'BOYNEXTDOOR', birth:'2002-07-27', gender:'male', sign:'♌ Leo' },
+    { id:391, name:'Leehan',  group:'BOYNEXTDOOR', birth:'2005-09-27', gender:'male', sign:'♎ Libra' },
+    { id:392, name:'Riwoo',   group:'BOYNEXTDOOR', birth:'2003-09-07', gender:'male', sign:'♍ Virgo' },
+    { id:393, name:'Taesan',  group:'BOYNEXTDOOR', birth:'2003-07-01', gender:'male', sign:'♋ Cancer' },
+    { id:394, name:'Jaehyun', group:'BOYNEXTDOOR', birth:'2004-05-06', gender:'male', sign:'♉ Taurus' },
+    { id:395, name:'Woonhak', group:'BOYNEXTDOOR', birth:'2005-07-17', gender:'male', sign:'♋ Cancer' },
+  ],
+  'THE BOYZ': [
+    { id:400, name:'Sangyeon', group:'THE BOYZ', birth:'1996-11-04', gender:'male', sign:'♏ Scorpio' },
+    { id:401, name:'Jacob',    group:'THE BOYZ', birth:'1997-05-30', gender:'male', sign:'♊ Gemini' },
+    { id:402, name:'Younghoon',group:'THE BOYZ', birth:'1997-08-08', gender:'male', sign:'♌ Leo' },
+    { id:403, name:'Juyeon',   group:'THE BOYZ', birth:'1998-01-15', gender:'male', sign:'♑ Capricorn' },
+    { id:404, name:'Kevin',    group:'THE BOYZ', birth:'1998-02-23', gender:'male', sign:'♓ Pisces' },
+    { id:405, name:'Q',        group:'THE BOYZ', birth:'1998-11-05', gender:'male', sign:'♏ Scorpio' },
+    { id:406, name:'Sunwoo',   group:'THE BOYZ', birth:'2000-04-12', gender:'male', sign:'♈ Aries' },
+    { id:407, name:'Eric',     group:'THE BOYZ', birth:'2000-12-22', gender:'male', sign:'♑ Capricorn' },
+  ],
+  'NMIXX': [
+    { id:410, name:'Lily',     group:'NMIXX', birth:'2003-09-13', gender:'female', sign:'♍ Virgo' },
+    { id:411, name:'Haewon',   group:'NMIXX', birth:'2003-01-27', gender:'female', sign:'♒ Aquarius' },
+    { id:412, name:'Sullyoon', group:'NMIXX', birth:'2004-08-26', gender:'female', sign:'♍ Virgo' },
+    { id:413, name:'Bae',      group:'NMIXX', birth:'2002-01-31', gender:'female', sign:'♒ Aquarius' },
+    { id:414, name:'Jiwoo',    group:'NMIXX', birth:'2004-10-26', gender:'female', sign:'♏ Scorpio' },
+    { id:415, name:'Kyujin',   group:'NMIXX', birth:'2005-01-01', gender:'female', sign:'♑ Capricorn' },
+  ],
+  'Kep1er': [
+    { id:420, name:'Yujin',    group:'Kep1er', birth:'2004-07-01', gender:'female', sign:'♋ Cancer' },
+    { id:421, name:'Mashiro',  group:'Kep1er', birth:'2002-06-30', gender:'female', sign:'♋ Cancer' },
+    { id:422, name:'Chaehyun', group:'Kep1er', birth:'2003-05-06', gender:'female', sign:'♉ Taurus' },
+    { id:423, name:'Hikaru',   group:'Kep1er', birth:'2003-09-06', gender:'female', sign:'♍ Virgo' },
+    { id:424, name:'Youngeun', group:'Kep1er', birth:'2002-09-23', gender:'female', sign:'♎ Libra' },
+    { id:425, name:'Dayeon',   group:'Kep1er', birth:'2003-09-23', gender:'female', sign:'♎ Libra' },
+    { id:426, name:'Xiaoting', group:'Kep1er', birth:'2002-10-25', gender:'female', sign:'♏ Scorpio' },
+  ],
+  'fromis_9': [
+    { id:430, name:'Hayoung',   group:'fromis_9', birth:'1997-06-24', gender:'female', sign:'♋ Cancer' },
+    { id:431, name:'Saerom',    group:'fromis_9', birth:'1997-09-11', gender:'female', sign:'♍ Virgo' },
+    { id:432, name:'Jiwon',     group:'fromis_9', birth:'1997-09-22', gender:'female', sign:'♎ Libra' },
+    { id:433, name:'Jisun',     group:'fromis_9', birth:'1998-08-24', gender:'female', sign:'♌ Leo' },
+    { id:434, name:'Seoyeon',   group:'fromis_9', birth:'1999-02-24', gender:'female', sign:'♓ Pisces' },
+    { id:435, name:'Chaeyoung', group:'fromis_9', birth:'1999-05-30', gender:'female', sign:'♊ Gemini' },
+    { id:436, name:'Nagyung',   group:'fromis_9', birth:'1999-12-29', gender:'female', sign:'♑ Capricorn' },
+    { id:437, name:'Gyuri',     group:'fromis_9', birth:'2000-06-08', gender:'female', sign:'♊ Gemini' },
+  ],
+  'GOT7': [
+    { id:440, name:'Jay B',    group:'GOT7', birth:'1994-01-06', gender:'male', sign:'♑ Capricorn' },
+    { id:441, name:'Mark',     group:'GOT7', birth:'1993-09-04', gender:'male', sign:'♍ Virgo' },
+    { id:442, name:'Jackson',  group:'GOT7', birth:'1994-03-28', gender:'male', sign:'♈ Aries' },
+    { id:443, name:'Jinyoung', group:'GOT7', birth:'1994-09-22', gender:'male', sign:'♍ Virgo' },
+    { id:444, name:'Youngjae', group:'GOT7', birth:'1996-09-17', gender:'male', sign:'♍ Virgo' },
+    { id:445, name:'BamBam',   group:'GOT7', birth:'1997-05-02', gender:'male', sign:'♉ Taurus' },
+    { id:446, name:'Yugyeom',  group:'GOT7', birth:'1997-09-17', gender:'male', sign:'♍ Virgo' },
+  ],
+  'DAY6': [
+    { id:450, name:'Sungjin', group:'DAY6', birth:'1993-01-16', gender:'male', sign:'♑ Capricorn' },
+    { id:451, name:'Young K', group:'DAY6', birth:'1993-12-19', gender:'male', sign:'♐ Sagittarius' },
+    { id:452, name:'Wonpil',  group:'DAY6', birth:'1994-04-28', gender:'male', sign:'♉ Taurus' },
+    { id:453, name:'Dowoon',  group:'DAY6', birth:'1995-08-25', gender:'male', sign:'♍ Virgo' },
+  ],
+  'MONSTA X': [
+    { id:460, name:'Shownu',   group:'MONSTA X', birth:'1992-06-18', gender:'male', sign:'♊ Gemini' },
+    { id:461, name:'Minhyuk',  group:'MONSTA X', birth:'1993-11-03', gender:'male', sign:'♏ Scorpio' },
+    { id:462, name:'Kihyun',   group:'MONSTA X', birth:'1993-11-22', gender:'male', sign:'♐ Sagittarius' },
+    { id:463, name:'Hyungwon', group:'MONSTA X', birth:'1994-01-15', gender:'male', sign:'♑ Capricorn' },
+    { id:464, name:'Joohoney', group:'MONSTA X', birth:'1994-10-06', gender:'male', sign:'♎ Libra' },
+    { id:465, name:'I.M',      group:'MONSTA X', birth:'1996-01-26', gender:'male', sign:'♒ Aquarius' },
   ],
 }
-
-const SOLO_SINGERS: Celebrity[] = [
-  { id:100, name:'IU',        group:'Solo Singer',    birth:'1993-05-16', gender:'female', sign:'♉ Taurus' },
-  { id:101, name:'Taeyeon',   group:'Solo / SNSD',    birth:'1989-03-09', gender:'female', sign:'♓ Pisces' },
-  { id:102, name:'G-Dragon',  group:'Solo / BIGBANG', birth:'1988-08-18', gender:'male',   sign:'♌ Leo' },
-  { id:103, name:'Zico',      group:'Solo / Block B', birth:'1992-09-14', gender:'male',   sign:'♍ Virgo' },
-  { id:104, name:'Taemin',    group:'Solo / SHINee',  birth:'1993-07-18', gender:'male',   sign:'♋ Cancer' },
-  { id:105, name:'Kai',       group:'Solo / EXO',     birth:'1994-01-14', gender:'male',   sign:'♑ Capricorn' },
-  { id:106, name:'Baekhyun',  group:'Solo / EXO',     birth:'1992-05-06', gender:'male',   sign:'♉ Taurus' },
-  { id:107, name:'Chanyeol',  group:'Solo / EXO',     birth:'1992-11-27', gender:'male',   sign:'♐ Sagittarius' },
-  { id:108, name:'Jisoo',     group:'Solo / BLACKPINK',birth:'1995-01-03',gender:'female', sign:'♑ Capricorn' },
-  { id:109, name:'Jennie',    group:'Solo / BLACKPINK',birth:'1996-01-16',gender:'female', sign:'♑ Capricorn' },
-]
-
-const ACTORS: Celebrity[] = [
-  { id:200, name:'Park Seo-jun',   group:'Actor',   birth:'1988-12-16', gender:'male',   sign:'♐ Sagittarius' },
-  { id:201, name:'Song Joong-ki',  group:'Actor',   birth:'1985-09-19', gender:'male',   sign:'♍ Virgo' },
-  { id:202, name:'Hyun Bin',       group:'Actor',   birth:'1982-09-25', gender:'male',   sign:'♍ Virgo' },
-  { id:203, name:'Lee Min-ho',     group:'Actor',   birth:'1987-06-22', gender:'male',   sign:'♊ Gemini' },
-  { id:204, name:'Gong Yoo',       group:'Actor',   birth:'1979-07-10', gender:'male',   sign:'♋ Cancer' },
-  { id:205, name:'Cha Eun-woo',    group:'Actor/ASTRO', birth:'1997-03-30', gender:'male', sign:'♈ Aries' },
-  { id:206, name:'Song Kang',      group:'Actor',   birth:'1994-04-23', gender:'male',   sign:'♉ Taurus' },
-  { id:208, name:'Son Ye-jin',     group:'Actress', birth:'1982-01-11', gender:'female', sign:'♑ Capricorn' },
-  { id:209, name:'Jun Ji-hyun',    group:'Actress', birth:'1981-10-30', gender:'female', sign:'♏ Scorpio' },
-  { id:210, name:'Kim Go-eun',     group:'Actress', birth:'1991-07-02', gender:'female', sign:'♋ Cancer' },
-  { id:211, name:'Han So-hee',     group:'Actress', birth:'1994-11-18', gender:'female', sign:'♏ Scorpio' },
-  { id:212, name:'Shin Min-a',     group:'Actress', birth:'1984-04-05', gender:'female', sign:'♈ Aries' },
-]
 
 const BIRTH_TIMES = [
   { value:'unknown',       label:'Unknown 모름' },
@@ -216,8 +325,6 @@ export default function DashboardClient({ user, initialCredits }: Props) {
   const [gender2, setGender2]           = useState('male')
 
   // Idol drill-down
-  const [celebCat, setCelebCat]         = useState<'singer'|'actor'>('singer')
-  const [singerType, setSingerType]     = useState<'group'|'solo'>('group')
   const [selectedGroup, setSelectedGroup] = useState<string>('BTS')
   const [selectedIdol, setSelectedIdol] = useState<Celebrity | null>(null)
   const [showCustom, setShowCustom]     = useState(false)
@@ -225,6 +332,14 @@ export default function DashboardClient({ user, initialCredits }: Props) {
   const [customBirth, setCustomBirth]   = useState('')
   const [customGender, setCustomGender] = useState('male')
   const [customGroup, setCustomGroup]   = useState('')
+
+  // 랭킹
+  type RankItem = { idol_name: string; group_name: string; count: number }
+  type GroupRankItem = { group_name: string; total_count: number }
+  const [rankTab, setRankTab]           = useState<'individual'|'group'>('individual')
+  const [indivRank, setIndivRank]       = useState<RankItem[]>([])
+  const [groupRank, setGroupRank]       = useState<GroupRankItem[]>([])
+  const [rankLoading, setRankLoading]   = useState(false)
 
   // Result
   const [loading, setLoading]           = useState(false)
@@ -259,9 +374,21 @@ export default function DashboardClient({ user, initialCredits }: Props) {
   }
 
   function getCurrentIdolList(): Celebrity[] {
-    if (celebCat === 'actor') return ACTORS
-    if (singerType === 'solo') return SOLO_SINGERS
     return GROUPS[selectedGroup] ?? []
+  }
+
+  async function fetchRankings() {
+    setRankLoading(true)
+    try {
+      const res = await fetch('/api/rankings')
+      if (res.ok) {
+        const data = await res.json()
+        setIndivRank(data.individual ?? [])
+        setGroupRank(data.group ?? [])
+      }
+    } catch { /* silent */ } finally {
+      setRankLoading(false)
+    }
   }
 
   const baseCostMap: Record<ReadingMode, number> = { personal: 1, compatibility: 2, idol: 3 }
@@ -448,7 +575,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
               onClick={() => { setMode(m); setResult(null) }}
             >
               <span className={styles.modeKr}>{t(lang, m)}</span>
-              <span className={styles.modeCost}>{costMap[m]} credit{costMap[m] > 1 ? 's' : ''}</span>
+              <span className={styles.modeCost}>{tCredits(lang, costMap[m])}</span>
             </button>
           ))}
         </div>
@@ -522,8 +649,8 @@ export default function DashboardClient({ user, initialCredits }: Props) {
                 {t(lang,'readingType')}
                 <span style={{ marginLeft:'0.5rem', fontSize:'0.72rem', color:'var(--muted)', fontWeight:400 }}>
                   {lang === 'Korean'
-                    ? `최대 10개 선택 가능 · 선택한 항목 수만큼 크레딧 소비 (현재 ${readingCats.length}개 선택 = ${Math.max(1, readingCats.length)} credit${readingCats.length > 1 ? 's' : ''})`
-                    : `Up to 10 · ${Math.max(1, readingCats.length)} credit${readingCats.length > 1 ? 's' : ''} (${readingCats.length} selected)`}
+                    ? `최대 10개 선택 가능 · 선택한 항목 수만큼 크레딧 소비 (현재 ${readingCats.length}개 선택 = ${tCredits('Korean', Math.max(1, readingCats.length))})`
+                    : `Up to 10 · ${tCredits(lang, Math.max(1, readingCats.length))} (${readingCats.length} selected)`}
                 </span>
               </div>
               <div className={styles.catGrid}>
@@ -594,24 +721,71 @@ export default function DashboardClient({ user, initialCredits }: Props) {
           {/* Idol drill-down */}
           {mode === 'idol' && (
             <>
+              {/* 실시간 랭킹 */}
+              <div style={{ margin:'1.2rem 0 0.8rem' }}>
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'0.6rem' }}>
+                  <span className={styles.sectionTitle} style={{ margin:0 }}>
+                    {lang === 'Korean' ? '✦ 실시간 랭킹' : lang === 'Japanese' ? '✦ リアルタイムランキング' : lang === 'Chinese' ? '✦ 实时排行榜' : '✦ Live Rankings'}
+                  </span>
+                  <button
+                    onClick={fetchRankings}
+                    style={{ fontSize:'0.72rem', color:'var(--gold)', background:'none', border:'none', cursor:'pointer', padding:'0.2rem 0.4rem' }}
+                  >
+                    {rankLoading ? '...' : '↻'}
+                  </button>
+                </div>
+                <div style={{ display:'flex', gap:'0.4rem', marginBottom:'0.6rem' }}>
+                  <button
+                    onClick={() => { setRankTab('individual'); if (indivRank.length === 0) fetchRankings() }}
+                    style={{ fontSize:'0.75rem', padding:'0.25rem 0.8rem', borderRadius:'20px', border:'1px solid var(--border)', background: rankTab==='individual' ? 'var(--gold)' : 'transparent', color: rankTab==='individual' ? '#1a1a2e' : 'var(--muted)', cursor:'pointer', fontWeight: rankTab==='individual' ? 700 : 400 }}
+                  >
+                    {lang === 'Korean' ? '개인 랭킹' : lang === 'Japanese' ? '個人' : lang === 'Chinese' ? '个人排行' : 'Individual'}
+                  </button>
+                  <button
+                    onClick={() => { setRankTab('group'); if (groupRank.length === 0) fetchRankings() }}
+                    style={{ fontSize:'0.75rem', padding:'0.25rem 0.8rem', borderRadius:'20px', border:'1px solid var(--border)', background: rankTab==='group' ? 'var(--gold)' : 'transparent', color: rankTab==='group' ? '#1a1a2e' : 'var(--muted)', cursor:'pointer', fontWeight: rankTab==='group' ? 700 : 400 }}
+                  >
+                    {lang === 'Korean' ? '그룹 랭킹' : lang === 'Japanese' ? 'グループ' : lang === 'Chinese' ? '团体排行' : 'Group'}
+                  </button>
+                </div>
+                <div style={{ background:'var(--paper)', border:'1px solid var(--border)', borderRadius:'8px', overflow:'hidden' }}>
+                  {rankLoading ? (
+                    <div style={{ padding:'1rem', textAlign:'center', color:'var(--muted)', fontSize:'0.8rem' }}>...</div>
+                  ) : rankTab === 'individual' ? (
+                    indivRank.length === 0 ? (
+                      <div style={{ padding:'0.8rem 1rem', color:'var(--muted)', fontSize:'0.78rem' }}>
+                        {lang === 'Korean' ? '아직 데이터가 없어요. 첫 번째 궁합을 확인해보세요!' : 'No data yet. Be the first!'}
+                      </div>
+                    ) : indivRank.map((r, i) => (
+                      <div key={i} style={{ display:'flex', alignItems:'center', padding:'0.45rem 1rem', borderBottom: i < indivRank.length-1 ? '1px solid var(--border)' : 'none', gap:'0.6rem' }}>
+                        <span style={{ fontSize:'0.8rem', fontWeight:700, color: i===0?'#FFD700':i===1?'#C0C0C0':i===2?'#CD7F32':'var(--muted)', minWidth:'1.4rem', textAlign:'center' }}>{i+1}</span>
+                        <span style={{ flex:1, fontSize:'0.82rem', fontWeight:600 }}>{r.idol_name}</span>
+                        <span style={{ fontSize:'0.75rem', color:'var(--muted)' }}>{r.group_name}</span>
+                        <span style={{ fontSize:'0.72rem', color:'var(--gold)', fontWeight:600 }}>{r.count.toLocaleString()}</span>
+                      </div>
+                    ))
+                  ) : (
+                    groupRank.length === 0 ? (
+                      <div style={{ padding:'0.8rem 1rem', color:'var(--muted)', fontSize:'0.78rem' }}>
+                        {lang === 'Korean' ? '아직 데이터가 없어요.' : 'No data yet.'}
+                      </div>
+                    ) : groupRank.map((r, i) => (
+                      <div key={i} style={{ display:'flex', alignItems:'center', padding:'0.45rem 1rem', borderBottom: i < groupRank.length-1 ? '1px solid var(--border)' : 'none', gap:'0.6rem' }}>
+                        <span style={{ fontSize:'0.8rem', fontWeight:700, color: i===0?'#FFD700':i===1?'#C0C0C0':i===2?'#CD7F32':'var(--muted)', minWidth:'1.4rem', textAlign:'center' }}>{i+1}</span>
+                        <span style={{ flex:1, fontSize:'0.82rem', fontWeight:600 }}>{r.group_name}</span>
+                        <span style={{ fontSize:'0.72rem', color:'var(--gold)', fontWeight:600 }}>{r.total_count.toLocaleString()}</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
               <div className={styles.sectionTitle} style={{marginTop:'1.2rem'}}>{t(lang,'celebSelect')}</div>
               <div className={styles.drillRow}>
-                <button className={`${styles.drillBtn} ${celebCat==='singer'?styles.drillActive:''}`} onClick={()=>{ setCelebCat('singer'); setSelectedIdol(null) }}>{t(lang,'singer')}</button>
-                <button className={`${styles.drillBtn} ${celebCat==='actor'?styles.drillActive:''}`} onClick={()=>{ setCelebCat('actor'); setSelectedIdol(null) }}>{t(lang,'actor')}</button>
+                {Object.keys(GROUPS).map(g => (
+                  <button key={g} className={`${styles.drillBtn} ${selectedGroup===g?styles.drillActive:''}`} onClick={()=>{ setSelectedGroup(g); setSelectedIdol(null) }}>{g}</button>
+                ))}
               </div>
-              {celebCat==='singer' && (
-                <div className={styles.drillRow}>
-                  <button className={`${styles.drillBtn} ${singerType==='group'?styles.drillActive:''}`} onClick={()=>{ setSingerType('group'); setSelectedIdol(null) }}>{t(lang,'group')}</button>
-                  <button className={`${styles.drillBtn} ${singerType==='solo'?styles.drillActive:''}`} onClick={()=>{ setSingerType('solo'); setSelectedIdol(null) }}>{t(lang,'solo')}</button>
-                </div>
-              )}
-              {celebCat==='singer' && singerType==='group' && (
-                <div className={styles.drillRow}>
-                  {Object.keys(GROUPS).map(g => (
-                    <button key={g} className={`${styles.drillBtn} ${selectedGroup===g?styles.drillActive:''}`} onClick={()=>{ setSelectedGroup(g); setSelectedIdol(null) }}>{g}</button>
-                  ))}
-                </div>
-              )}
               <div className={styles.idolGrid}>
                 {getCurrentIdolList().map(idol => (
                   <div
@@ -649,9 +823,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
 
         {/* Submit */}
         <button className={styles.btnSubmit} onClick={handleSubmit} disabled={loading}>
-          {loading
-            ? t(lang,'reading')
-            : `${t(lang,'submit')} · ${costMap[mode]} ${t(lang,'creditUnit')}${costMap[mode] > 1 ? 's' : ''}`}
+          {loading ? t(lang,'reading') : `${t(lang,'submit')} · ${tCredits(lang, costMap[mode])}`}
         </button>
 
         {/* Loading */}
@@ -681,7 +853,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
                 onClick={handleGenerateImage}
                 disabled={generatingImage || generatingBaby}
               >
-                {generatingImage ? t(lang,'aiImageLoading') : `${t(lang,'aiImageBtn')} · 3 credits`}
+                {generatingImage ? t(lang,'aiImageLoading') : `${t(lang,'aiImageBtn')} · ${tCredits(lang, 3)}`}
               </button>
             )}
 
@@ -693,8 +865,8 @@ export default function DashboardClient({ user, initialCredits }: Props) {
                 </div>
                 <div style={{ fontSize:'0.78rem', color:'var(--muted)', marginBottom:'0.9rem' }}>
                   {lang === 'Korean'
-                    ? '두 사람의 얼굴 사진을 업로드하면 사주를 바탕으로 예상 2세 이미지를 생성합니다 · 3 credits'
-                    : 'Upload two face photos to generate a predicted future child based on your Saju · 3 credits'}
+                    ? `두 사람의 얼굴 사진을 업로드하면 사주를 바탕으로 예상 2세 이미지를 생성합니다 · ${tCredits('Korean', 3)}`
+                    : `Upload two face photos to generate a predicted future child based on your Saju · ${tCredits(lang, 3)}`}
                 </div>
                 <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0.75rem', marginBottom:'0.9rem' }}>
                   {/* 사진 1 */}
@@ -757,7 +929,7 @@ export default function DashboardClient({ user, initialCredits }: Props) {
                       ? (lang === 'Korean' ? '2세 이미지 만드는 중...' : 'Generating...')
                       : (!face1File || !face2File)
                         ? (lang === 'Korean' ? '사진 2장을 먼저 업로드해주세요' : 'Upload both photos first')
-                        : (lang === 'Korean' ? '✦ 2세 이미지 생성 · 3 credits' : '✦ Generate Baby Image · 3 credits')}
+                        : (lang === 'Korean' ? `✦ 2세 이미지 생성 · ${tCredits('Korean', 3)}` : `✦ Generate Baby Image · ${tCredits(lang, 3)}`)}
                   </button>
                 )}
                 {generatedBabyImage && (

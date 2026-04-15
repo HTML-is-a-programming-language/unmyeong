@@ -431,3 +431,17 @@ export function t(lang: string, key: string): string {
   const langCode = lang as LangCode
   return T[langCode]?.[key] ?? T['English']?.[key] ?? key
 }
+
+// 크레딧 단위 — 언어별 복수형 처리 포함
+export function tCredits(lang: string, n: number): string {
+  switch (lang as LangCode) {
+    case 'Korean':     return `${n} 크레딧 사용`
+    case 'English':    return `${n} credit${n !== 1 ? 's' : ''}`
+    case 'Japanese':   return `${n} クレジット使用`
+    case 'Thai':       return `ใช้ ${n} เครดิต`
+    case 'Spanish':    return `${n} crédito${n !== 1 ? 's' : ''}`
+    case 'Portuguese': return `${n} crédito${n !== 1 ? 's' : ''}`
+    case 'Chinese':    return `${n} 积分`
+    default:           return `${n} credit${n !== 1 ? 's' : ''}`
+  }
+}

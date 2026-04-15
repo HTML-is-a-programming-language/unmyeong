@@ -432,6 +432,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: '크레딧 처리 중 오류가 발생했어요.' }, { status: 500 })
     }
 
+    // 3-1. 아이돌 궁합 통계 기록 (비동기, 실패해도 결과에 영향 없음)
+    if (body.mode === 'idol' && body.celebrity) {
+      const celeb = body.celebrity
+      supabase.rpc('increment_idol_count', {
+        p_name: celeb.name,
+        p_group: celeb.group,
+      }).then(() => {}).catch(() => {})
+    }
+
     // 4. 프롬프트 생성 및 Claude 호출
     let reading = ''
 
