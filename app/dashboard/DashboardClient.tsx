@@ -174,6 +174,15 @@ const GROUPS: Record<string, Celebrity[]> = {
     { id:539, name:'Atom',   group:'NEXZ', birth:'2005-11-01', gender:'male', sign:'♏ Scorpio' },
     { id:540, name:'Ryo',    group:'NEXZ', birth:'2006-02-14', gender:'male', sign:'♒ Aquarius' },
   ],
+  'KickFlip': [
+    { id:718, name:'Kyehoon',   group:'KickFlip', birth:'2004-09-16', gender:'male', sign:'♍ Virgo' },
+    { id:719, name:'Amaru',     group:'KickFlip', birth:'2005-10-21', gender:'male', sign:'♎ Libra' },
+    { id:720, name:'Donghwa',   group:'KickFlip', birth:'2006-03-11', gender:'male', sign:'♓ Pisces' },
+    { id:721, name:'Juwang',    group:'KickFlip', birth:'2006-05-02', gender:'male', sign:'♉ Taurus' },
+    { id:722, name:'Minje',     group:'KickFlip', birth:'2006-05-12', gender:'male', sign:'♉ Taurus' },
+    { id:723, name:'Keiju',     group:'KickFlip', birth:'2006-10-04', gender:'male', sign:'♎ Libra' },
+    { id:724, name:'Donghyeon', group:'KickFlip', birth:'2007-03-13', gender:'male', sign:'♓ Pisces' },
+  ],
 
   // ── YG ───────────────────────────────────────────────────────────
   'BLACKPINK': [
@@ -312,6 +321,16 @@ const GROUPS: Record<string, Celebrity[]> = {
     { id:596, name:'Sakuya',  group:'NCT WISH', birth:'2005-04-12', gender:'male', sign:'♈ Aries' },
     { id:597, name:'Wonhak',  group:'NCT WISH', birth:'2006-08-19', gender:'male', sign:'♌ Leo' },
   ],
+  'Hearts2Hearts': [
+    { id:725, name:'Jiwoo',  group:'Hearts2Hearts', birth:'2006-09-07', gender:'female', sign:'♍ Virgo' },
+    { id:726, name:'Carmen', group:'Hearts2Hearts', birth:'2006-03-28', gender:'female', sign:'♈ Aries' },
+    { id:727, name:'Yuha',   group:'Hearts2Hearts', birth:'2007-04-12', gender:'female', sign:'♈ Aries' },
+    { id:728, name:'Stella', group:'Hearts2Hearts', birth:'2007-06-18', gender:'female', sign:'♊ Gemini' },
+    { id:729, name:'Juun',   group:'Hearts2Hearts', birth:'2008-12-03', gender:'female', sign:'♐ Sagittarius' },
+    { id:730, name:'A-na',   group:'Hearts2Hearts', birth:'2008-12-20', gender:'female', sign:'♐ Sagittarius' },
+    { id:731, name:'Ian',    group:'Hearts2Hearts', birth:'2009-10-09', gender:'female', sign:'♎ Libra' },
+    { id:732, name:'Ye-on',  group:'Hearts2Hearts', birth:'2010-04-19', gender:'female', sign:'♈ Aries' },
+  ],
 
   // ── STARSHIP ─────────────────────────────────────────────────────
   'IVE': [
@@ -374,6 +393,13 @@ const GROUPS: Record<string, Celebrity[]> = {
     { id:625, name:'Yujeong',  group:'LIGHTSUM', birth:'2003-10-11', gender:'female', sign:'♎ Libra' },
     { id:626, name:'Huiyeon',  group:'LIGHTSUM', birth:'2004-11-17', gender:'female', sign:'♏ Scorpio' },
     { id:627, name:'Sian',     group:'LIGHTSUM', birth:'2005-06-07', gender:'female', sign:'♊ Gemini' },
+  ],
+  'NOWZ': [
+    { id:733, name:'Hyeonbin', group:'NOWZ', birth:'2002-08-31', gender:'male', sign:'♍ Virgo' },
+    { id:734, name:'Yoon',     group:'NOWZ', birth:'2003-08-27', gender:'male', sign:'♍ Virgo' },
+    { id:735, name:'Yeonwoo',  group:'NOWZ', birth:'2003-09-23', gender:'male', sign:'♎ Libra' },
+    { id:736, name:'Jinhyuk',  group:'NOWZ', birth:'2004-05-21', gender:'male', sign:'♊ Gemini' },
+    { id:737, name:'Siyun',    group:'NOWZ', birth:'2004-08-24', gender:'male', sign:'♍ Virgo' },
   ],
   'PENTAGON': [
     { id:628, name:'Hui',      group:'PENTAGON', birth:'1993-08-28', gender:'male', sign:'♍ Virgo' },
@@ -476,6 +502,15 @@ const GROUPS: Record<string, Celebrity[]> = {
     { id:677, name:'Jonghyun', group:'CNBLUE', birth:'1990-05-15', gender:'male', sign:'♉ Taurus' },
     { id:678, name:'Minhyuk',  group:'CNBLUE', birth:'1991-02-27', gender:'male', sign:'♓ Pisces' },
     { id:679, name:'Jungshin', group:'CNBLUE', birth:'1991-09-15', gender:'male', sign:'♍ Virgo' },
+  ],
+  'AMPERS&ONE': [
+    { id:738, name:'Kamden',   group:'AMPERS&ONE', birth:'2001-06-09', gender:'male', sign:'♊ Gemini' },
+    { id:739, name:'Brian',    group:'AMPERS&ONE', birth:'2002-08-27', gender:'male', sign:'♍ Virgo' },
+    { id:740, name:'Jiho',     group:'AMPERS&ONE', birth:'2004-06-10', gender:'male', sign:'♊ Gemini' },
+    { id:741, name:'Siyun',    group:'AMPERS&ONE', birth:'2005-01-08', gender:'male', sign:'♑ Capricorn' },
+    { id:742, name:'Kyrell',   group:'AMPERS&ONE', birth:'2005-07-03', gender:'male', sign:'♋ Cancer' },
+    { id:743, name:'Mackiah',  group:'AMPERS&ONE', birth:'2006-01-21', gender:'male', sign:'♒ Aquarius' },
+    { id:744, name:'Seungmo',  group:'AMPERS&ONE', birth:'2006-07-03', gender:'male', sign:'♋ Cancer' },
   ],
 
   // ── RBW ──────────────────────────────────────────────────────────
