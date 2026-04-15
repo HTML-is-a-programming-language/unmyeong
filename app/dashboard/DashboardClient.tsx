@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import type { ReadingMode, ReadingCategory, Celebrity } from '@/types'
@@ -390,6 +390,11 @@ export default function DashboardClient({ user, initialCredits }: Props) {
       setRankLoading(false)
     }
   }
+
+  // 아이돌 탭 진입 시 랭킹 자동 로드
+  useEffect(() => {
+    if (mode === 'idol') fetchRankings()
+  }, [mode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const baseCostMap: Record<ReadingMode, number> = { personal: 1, compatibility: 2, idol: 3 }
   const personalCost = mode === 'personal' ? Math.max(1, readingCats.length) : baseCostMap[mode]
